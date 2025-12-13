@@ -1,6 +1,9 @@
 {
   "name": "general-frontend-boilerplate",
   "description": "Project template based on Grunt task runner",
+  "scripts": {
+    "build": "grunt build"
+  },
   "devDependencies": {
     "@babel/core": "^7.3.3",
     "@babel/preset-env": "^7.3.1",
