@@ -148,7 +148,7 @@ input[type=submit] {
 
 body {
     font-family: "Aboreto";
-    font-weight: regular;
+    font-weight: bold;
 }
 
 h1 {
@@ -175,6 +175,7 @@ a {
 }
 
 a:hover {
+    text-decoration: underline;
 }
 
 .nav {
@@ -239,7 +240,6 @@ a:hover {
     min-height: 115px;
     padding: 35px 0;
     background-color: #fff;
-    font-weight: bold;
 }
 
 .page-header__inner {
@@ -274,6 +274,7 @@ a:hover {
 }
 
 .page-header__nav-link:hover {
+    text-decoration: underline;
 }
 
 .page-header__nav-link_selected {
@@ -387,7 +388,6 @@ a:hover {
     float: left;
     text-align: right;
     padding: 25px 0;
-    display: flow-root;
 }
 
 .services__logo {
@@ -513,16 +513,16 @@ a:hover {
 }
 
 .event:hover .event__date span {
-    background-color: #d18966;
+    background-color: #9b242d;
 }
 
 .event:hover .event__date span:after {
-    border-top-color: #d18966;
+    border-top-color: #9b242d;
 }
 
 .event__date {
     font-size: 30px;
-    color: #d18966;
+    color: #9b242d;
 }
 
 .event__date span {
@@ -573,7 +573,7 @@ a:hover {
 }
 
 .event__button:hover {
-    background-color: #d18966;
+    background-color: #9b242d;
 }
 
 .page-footer {
@@ -606,6 +606,7 @@ a:hover {
 }
 
 .page-footer__nav-link:hover {
+    text-decoration: underline;
 }
 
 .page-footer__nav-link_selected {
@@ -655,7 +656,7 @@ a:hover {
 
 .widget_feed input[type=submit] {
     height: 40px;
-    background-color: #d18966;
+    background-color: #9b242d;
     color: #fff;
 }
 
