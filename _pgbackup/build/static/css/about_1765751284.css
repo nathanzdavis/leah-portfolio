@@ -1,0 +1,121 @@
+/* =========================
+   ABOUT HERO
+========================= */
+
+.about-hero {
+    width: 100%;
+    padding: 75px 0 90px;
+    background-color: #f1efec;
+    text-align: center;
+}
+
+.about-hero__title {
+    font-family: 'Aboreto', serif;
+    font-size: 50px;
+    color: #373838;
+    letter-spacing: 3px;
+}
+
+
+/* =========================
+   ABOUT SECTION
+========================= */
+
+.about {
+    width: 100%;
+    padding: 90px 0;
+    background-color: rgb(239, 239, 239);
+
+}
+
+.about__inner {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 0 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 70px;
+}
+
+.about__image {
+    width: 40%;
+    text-align: center;
+}
+
+.about__image img {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    border-radius: 4px;
+}
+
+.about__content {
+    width: 60%;
+}
+
+.about__content h2 {
+    font-size: 30px;
+    margin-bottom: 25px;
+    color: #373838;
+}
+
+.about__content p {
+    font-size: 16px;
+    font-family: 'Albert Sans';
+    line-height: 24px;
+    color: #373838;
+    margin-bottom: 18px;
+}
+
+
+/* =========================
+   DIVIDER (OPTIONAL)
+========================= */
+
+.about-divider {
+    width: 60px;
+    height: 3px;
+    background-color: #d18966;
+    margin: 25px 0 30px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media screen and (max-width: 900px) {
+    .about__inner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about__image,
+    .about__content {
+        width: 100%;
+    }
+
+    .about__content h2 {
+        margin-top: 30px;
+    }
+
+    .about-divider {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .about {
+        padding: 60px 0;
+    }
+
+    .about-hero {
+        padding: 80px 0 60px;
+    }
+
+    .about-hero__title {
+        font-size: 40px;
+    }
+}
