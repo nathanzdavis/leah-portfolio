@@ -6,5 +6,12 @@
     { "source": "/repertoire", "destination": "/repertoire.html" },
     { "source": "/gallery", "destination": "/gallery.html" },
     { "source": "/sheet-music", "destination": "/sheet-music.html" }
+  ],
+  "redirects": [
+    { "source": "/home.html", "destination": "/home", "permanent": true },
+    { "source": "/about.html", "destination": "/about", "permanent": true },
+    { "source": "/repertoire.html", "destination": "/repertoire", "permanent": true },
+    { "source": "/gallery.html", "destination": "/gallery", "permanent": true },
+    { "source": "/sheet-music.html", "destination": "/sheet-music", "permanent": true }
   ]
 }
