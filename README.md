@@ -69,7 +69,7 @@ Product mockup created with [http://frame.lab25.co.uk/](http://frame.lab25.co.uk
 │   └── data/                                  * configs and data for templates
 │
 └── build/                                     * built source
-    ├── index.html
+    ├── home.html
     ├── page.html
     |
     └── static/                                * static assets
