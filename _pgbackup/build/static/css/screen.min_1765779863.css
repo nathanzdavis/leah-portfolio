@@ -690,8 +690,7 @@ a:hover {
     width: 40px;
     height: 40px;
     margin: 0 10px 0 0;
-    background: url(../images/socials.png) no-repeat;
-    background-color: transparent;
+    background: url(../images/solid-social-icons.jpg) no-repeat;
     font-size: 0;
     overflow: hidden;
     white-space: nowrap;
@@ -709,15 +708,15 @@ a:hover {
 }
 
 .widget__icon_fb {
-    background-position: -25px -22px;
+    background-position: 125 56;
 }
 
 .widget__icon_tw {
-    background-position: -90px -21px;
+    background-position: -41px 0;
 }
 
 .widget__icon_gplus {
-    background-position: -155px -21px;
+    background-position: -82px 0;
 }
 
 .widget__title {
