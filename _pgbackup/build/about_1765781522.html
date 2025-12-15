@@ -15,15 +15,15 @@
         <link rel="stylesheet" href="static/css/about.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Albert+Sans&display=swap">
     </head>
-    <body>
+    <body> 
         <header class="page-header">
             <div class="page-header__inner">
                 <nav class="nav page-header__nav">
                     <!-- Logo -->
-                    <a class="page-header__nav-link" href="index.html" style="position:absolute; left:0; font-weight:bold; font-size:26px; padding-left:36px; font-family:'Aguafina Script', cursive;">
+                    <a class="page-header__nav-link" href="index.html" style="font-weight:bold; font-size:26px; color: #3a3a3a;  font-family:'Aguafina Script', cursive;">
                             LM </a>
                     <!-- Navigation -->
-                    <span style="position:absolute; right:0; padding-right:50px; display:flex; gap:16px;"> <a class="page-header__nav-link" href="index.html">
+                    <span> <a class="page-header__nav-link" href="index.html">
                                 Home </a> <a class="page-header__nav-link page-header__nav-link_selected" href="about.html">
                                 About </a> <a class="page-header__nav-link" href="repertoire.html">
                                 Repertoire </a> <a class="page-header__nav-link" href="gallery.html">
@@ -31,14 +31,14 @@
                                 Sheet Music </a> </span>
                 </nav>
             </div>
-        </header>
+        </header>         
         <section class="about-hero">
-            <h1 class="about-hero__title">About Me</h1>
+            <h1 class="about-hero__title">About</h1>
         </section>
         <section class="about">
             <div class="about__inner">
                 <div class="about__image">
-                    <img src="static/images/leah1.jpg" alt="Leah Marie portrait">
+                    <img src="static/images/leah4.jpg" alt="Leah Marie portrait">
                 </div>
                 <div class="about__content">
                     <h2>Leah Marie</h2>
@@ -59,16 +59,25 @@
         </section>
         <footer class="page-footer">
             <div class="page-footer__inner">
-                <nav class="nav page-footer__nav">
-                    <a class="page-footer__nav-link" href="index.html">Home</a>
-                    <a class="page-footer__nav-link page-footer__nav-link_selected">About</a>
-                    <a class="page-footer__nav-link" href="#">Repertoire</a>
-                    <a class="page-footer__nav-link" href="#">Gallery</a>
-                    <a class="page-footer__nav-link" href="#">Sheet Music</a>
+                <nav class="nav page-footer__nav"><a class="page-footer__nav-link" href="index.html">Home</a><a class="page-footer__nav-link page-footer__nav-link_selected" href="#">About</a><a class="page-footer__nav-link" href="#">Repertoire</a><a class="page-footer__nav-link" href="#">Gallery</a><a class="page-footer__nav-link" href="#">Sheet Music</a>
                 </nav>
-                <div class="copyright">
-                    LEAH MARIE &copy; 2025
-</div>
+                <div class="widgets">
+                    <div class="widget widget_social">
+                        <h3 class="widget__title">Follow Me</h3><a class="widget__icon widget__icon_fb" href="#">Facebook</a><a class="widget__icon widget__icon_tw" href="#">Twitter</a><a class="widget__icon widget__icon_gplus" href="#">Google+</a>
+                    </div>
+                    <div class="widget widget_feed">
+                        <form class="subscribe-form" action="#" method="post"> 
+                            <label for="#email-subscribe"></label>                             
+                        </form>
+                    </div>
+                    <div class="widget widget_contact">
+                        <h3 class="widget__title">Contact Me</h3>
+                        <p class="widget__text">Adress</p>
+                        <p class="widget__text">New Street</p>
+                        <p class="widget__text">ph :xxxxx-xxx-xxx</p>
+                    </div>
+                </div>
+                <div class="copyright">LEAH MARIE &copy; 2025</div>
             </div>
         </footer>
     </body>
