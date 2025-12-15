@@ -102,30 +102,30 @@
 
 /* Lightbox styles */
 .lightbox {
-    display: none;            /* start hidden */
+    display: none;
     position: fixed;
     z-index: 9999;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh;            /* full viewport height */
+    height: 100%;
+    overflow: auto;
     background-color: rgba(0,0,0,0.9);
-    padding: 20px;
-    
-    /* flex centering */
     justify-content: center;
-    align-items: center;
-}
-
-.lightbox:target {
-    display: flex;            /* show when targeted */
+    align-items: center; /* vertical centering */
 }
 
 .lightbox img {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 8px;
     margin: 0;
+    display: block;
+    max-width: 90%;
+    max-height: 80%;
+    border-radius: 8px;
+    animation: zoomIn 0.3s ease;
+}
+
+.lightbox:target {
+    display: block;
 }
 
 @keyframes zoomIn {
