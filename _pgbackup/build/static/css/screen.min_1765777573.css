@@ -261,8 +261,11 @@ a:hover {
 
 .page-header__nav {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+
+    /* 👈 pushes content to edges */
+    width: 100%;
     padding: 18px 36px;
 }
 
@@ -892,26 +895,21 @@ a:hover {
 }
 
 /* =========================
-   STACKED / MOBILE LAYOUT
+   MOBILE HEADER
 ========================= */
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 768px) {
     .page-header__nav {
         flex-direction: column;
-
-        /* stack */
-        justify-content: center;
         gap: 14px;
         text-align: center;
     }
 
-    .logo {
-        order: 0;
+    .nav-links {
+        justify-content: center;
+        gap: 12px;
     }
 
-    .nav-links {
-        order: 1;
-        margin-left: 0;
-        justify-content: center;
-        flex-wrap: wrap;
+    .page-header__nav-link {
+        font-size: 14px;
     }
 }

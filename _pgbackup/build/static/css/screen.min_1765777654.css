@@ -261,8 +261,11 @@ a:hover {
 
 .page-header__nav {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+
+    /* 👈 pushes content to edges */
+    width: 100%;
     padding: 18px 36px;
 }
 

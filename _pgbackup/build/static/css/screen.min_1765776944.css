@@ -221,11 +221,12 @@ a:hover {
 }
 
 .logo {
-    font-family: 'Aguafina Script', cursive;
-    font-size: 26px;
-    color: #3a3a3a;
-    text-decoration: none;
-    white-space: nowrap;
+    background: url(../images/logo.png) 0 0 no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+    font-size: 0;
+    overflow: hidden;
+    text-indent: 999px;
 }
 
 .logo span {
@@ -243,6 +244,7 @@ a:hover {
 }
 
 .page-header__inner {
+    max-width: 1024px;
     margin: 0 auto;
 }
 
@@ -260,10 +262,8 @@ a:hover {
 }
 
 .page-header__nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 18px 36px;
+    float: right;
+    text-align: right;
 }
 
 .page-header__nav-link {
@@ -888,30 +888,5 @@ a:hover {
         float: none;
         text-align: center;
         clear: both;
-    }
-}
-
-/* =========================
-   STACKED / MOBILE LAYOUT
-========================= */
-@media screen and (max-width: 900px) {
-    .page-header__nav {
-        flex-direction: column;
-
-        /* stack */
-        justify-content: center;
-        gap: 14px;
-        text-align: center;
-    }
-
-    .logo {
-        order: 0;
-    }
-
-    .nav-links {
-        order: 1;
-        margin-left: 0;
-        justify-content: center;
-        flex-wrap: wrap;
     }
 }
