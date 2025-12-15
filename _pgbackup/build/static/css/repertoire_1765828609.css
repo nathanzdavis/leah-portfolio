@@ -1,0 +1,145 @@
+/* =========================
+   REPERTOIRE PAGE STYLES
+   Matches existing Leah Marie site aesthetic
+========================= */
+.about-hero {
+    width: 100%;
+    padding: 75px 0 90px;
+    background-color: #f1efec;
+    background-image: url(../images/bg/bg3.jpg);
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    text-align: center;
+}
+
+.about-hero__title {
+    font-family: 'Aboreto', serif;
+    font-size: 50px;
+    color: #fff;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 1);
+    letter-spacing: 3px;
+}
+
+.repertoire {
+    width: 100%;
+    padding: 15px 0;
+    background-color: #fff;
+}
+
+.repertoire__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.repertoire h1 {
+    font-family: 'Aboreto', serif;
+    font-size: 42px;
+    text-align: center;
+    margin-bottom: 60px;
+    color: #373838;
+}
+
+.repertoire h2 {
+    font-family: 'Aboreto', serif;
+    font-size: 26px;
+    margin: 70px 0 25px;
+    color: #373838;
+    letter-spacing: 1px;
+}
+
+/* =========================
+   TABLE STYLING
+========================= */
+.repertoire table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+    font-family: 'Albert Sans', sans-serif;
+    font-size: 15px;
+}
+
+.repertoire th {
+    text-align: left;
+    padding: 14px 12px;
+    background-color: #f1efec;
+    color: #373838;
+    font-weight: 600;
+    border-bottom: 2px solid #d8d5cf;
+}
+
+.repertoire td {
+    padding: 12px;
+    border-bottom: 1px solid #e3e1dc;
+    vertical-align: top;
+    color: #373838;
+}
+
+.repertoire tr:last-child td {
+    border-bottom: none;
+}
+
+.repertoire tr:hover td {
+    background-color: #faf9f7;
+}
+
+/* =========================
+   SECTION DIVIDER
+========================= */
+.repertoire-divider {
+    width: 70px;
+    height: 3px;
+    background-color: #d18966;
+    margin: 50px 0 30px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media screen and (max-width: 900px) {
+    .repertoire table,
+    .repertoire thead,
+    .repertoire tbody,
+    .repertoire th,
+    .repertoire td,
+    .repertoire tr {
+        display: block;
+    }
+
+    .repertoire th {
+        display: none;
+    }
+
+    .repertoire tr {
+        margin-bottom: 25px;
+        border-bottom: 2px solid #e3e1dc;
+        padding-bottom: 15px;
+    }
+
+    .repertoire td {
+        padding: 6px 0;
+    }
+
+    .repertoire td::before {
+        content: attr(data-label);
+        display: block;
+        font-weight: 600;
+        margin-bottom: 2px;
+        color: #6b6b6b;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .repertoire {
+        padding: 60px 0;
+    }
+
+    .repertoire h1 {
+        font-size: 34px;
+    }
+
+    .repertoire h2 {
+        font-size: 22px;
+    }
+}

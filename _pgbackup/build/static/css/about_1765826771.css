@@ -1,6 +1,7 @@
 /* =========================
    ABOUT HERO
 ========================= */
+
 .about-hero {
     width: 100%;
     padding: 75px 0 90px;
@@ -20,13 +21,16 @@
     letter-spacing: 3px;
 }
 
+
 /* =========================
    ABOUT SECTION
 ========================= */
+
 .about {
     width: 100%;
     padding: 90px 0;
     background-color: #fff;
+
 }
 
 .about__inner {
@@ -69,9 +73,11 @@
     margin-bottom: 18px;
 }
 
+
 /* =========================
    DIVIDER (OPTIONAL)
 ========================= */
+
 .about-divider {
     width: 60px;
     height: 3px;
@@ -79,75 +85,11 @@
     margin: 25px 0 30px;
 }
 
-/* =========================
-   SECTION SEPARATOR
-========================= */
-.section-separator {
-    width: 100%;
-    height: 1px;
-    background-color: #e2ded9;
-    margin: 0 auto;
-}
-
-/* =========================
-   CONTACT INFO SECTION
-========================= */
-.contact-info {
-    width: 100%;
-    padding: 75px 0;
-    background-color: #f9f8f6;
-}
-
-.contact-info__inner {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 0 20px;
-    text-align: center;
-}
-
-.contact-info h2 {
-    font-size: 30px;
-    margin-bottom: 20px;
-    color: #373838;
-    font-family: 'Aboreto', serif;
-    letter-spacing: 2px;
-}
-
-.contact-info__intro {
-    font-size: 16px;
-    font-family: 'Albert Sans';
-    margin-bottom: 35px;
-    color: #555;
-}
-
-.contact-info__details p {
-    font-size: 16px;
-    font-family: 'Albert Sans';
-    margin-bottom: 12px;
-    color: #373838;
-}
-
-.contact-info__details a {
-    color: #d18966;
-    text-decoration: none;
-}
-
-.contact-info__details a:hover {
-    text-decoration: underline;
-}
 
 /* =========================
    RESPONSIVE
 ========================= */
-@media screen and (max-width: 640px) {
-    .contact-info {
-        padding: 60px 0;
-    }
-}
 
-/* =========================
-   RESPONSIVE
-========================= */
 @media screen and (max-width: 900px) {
     .about__inner {
         flex-direction: column;
