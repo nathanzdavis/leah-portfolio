@@ -12,69 +12,56 @@
         <link rel="stylesheet" href="static/css/screen.min.css">
         <link rel="stylesheet" href="static/css/custom.min.css">
         <!-- About page styles -->
-        <link rel="stylesheet" href="static/css/about.css">
+        <link rel="stylesheet" href="static/css/sheet-music.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Albert+Sans&display=swap">
         <script defer src="/_vercel/insights/script.js"></script>
     </head>
-    <body> 
+    <body>
         <header class="page-header">
             <div class="page-header__inner">
                 <nav class="nav page-header__nav">
                     <!-- Logo -->
                     <a class="page-header__nav-link" href="home.html" style="font-weight:bold; font-size:26px; color: #3a3a3a;  font-family:'Aguafina Script', cursive;">
-                            LM </a>
+                        LM </a>
                     <!-- Navigation -->
                     <span> <a class="page-header__nav-link" href="home.html">
-                                Home </a> <a class="page-header__nav-link page-header__nav-link_selected" href="about.html">
-                                About </a> <a class="page-header__nav-link" href="repertoire.html">
-                                Repertoire </a> <a class="page-header__nav-link" href="gallery.html">
-                                Gallery </a> <a class="page-header__nav-link" href="sheet-music.html">
-                                Sheet Music </a> </span>
+                            Home </a> <a class="page-header__nav-link" href="about.html">
+                            About </a> <a class="page-header__nav-link" href="repertoire.html">
+                            Repertoire </a> <a class="page-header__nav-link" href="gallery.html">
+                            Gallery </a> <a class="page-header__nav-link page-header__nav-link_selected" href="sheet-music.html">
+                            Sheet Music </a> </span>
                 </nav>
             </div>
         </header>         
-        <section class="about-hero">
-            <h1 class="about-hero__title">About</h1>
+        <!-- HERO -->
+        <section class="sheet-hero">
+            <h1 class="sheet-hero__title">Sheet Music</h1>
         </section>
-        <section class="about">
-            <div class="about__inner">
-                <div class="about__image">
-                    <img src="static/images/leah4.jpg" alt="Leah Marie portrait">
+        <!-- CONTENT -->
+        <section class="sheet-section">
+            <!-- PDFs -->
+            <h2>Scores</h2>
+            <div class="pdf-grid">
+                <div class="pdf-card">
+                    <h3>Sheet One</h3>
+                    <iframe src="static/sheet-music/composition1.pdf" title="Composition One Sheet Music">
+</iframe>
                 </div>
-                <div class="about__content">
-                    <h2>Leah Marie</h2>
-                    <p>
-        Leah Marie is a cellist and percussionist with a passion for expressive
-        performance and musical storytelling. Her work spans classical,
-        contemporary, and collaborative performance settings. </p>
-                    <p>
-        With years of experience performing in ensembles and solo settings,
-        Leah brings depth, sensitivity, and technical precision to every piece.
-        Her musical style blends discipline with emotion, creating performances
-        that resonate deeply with audiences. </p>
-                    <p>
-        When not performing, Leah enjoys teaching, composing, and exploring new
-        musical collaborations. </p>
+                <div class="pdf-card">
+                    <h3>Sheet Two</h3>
+                    <iframe src="static/sheet-music/composition2.pdf" title="Composition Two Sheet Music">
+</iframe>
                 </div>
             </div>
-        </section>
-        <!-- Separator -->
-        <div class="section-separator"></div>
-        <section class="contact-info">
-            <div class="contact-info__inner">
-                <h2>Contact</h2>
-                <p class="contact-info__intro">
-                    For performances, collaborations, or teaching inquiries, feel free to reach out. </p>
-                <div class="contact-info__details">
-                    <p><strong>Email:</strong> <a href="mailto:leah@email.com">leah.m.mosier@email.com</a></p>
-                    <p><strong>Phone:</strong> (555) 123-4567</p>
-                    <p><strong>Location:</strong> United States</p>
-                </div>
+            <!-- VIDEO -->
+            <h2>Performance Video</h2>
+            <div class="video-wrapper">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/dEO5PqcF6AY?si=rqTtvXLDKJgEdT9V" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
         </section>
         <footer class="page-footer">
             <div class="page-footer__inner">
-                <nav class="nav page-footer__nav"><a class="page-footer__nav-link" href="home.html">Home</a><a class="page-footer__nav-link page-footer__nav-link_selected" href="about.html">About</a><a class="page-footer__nav-link" href="repertoire.html">Repertoire</a><a class="page-footer__nav-link" href="gallery.html">Gallery</a><a class="page-footer__nav-link" href="sheet-music.html">Sheet Music</a>
+                <nav class="nav page-footer__nav"><a class="page-footer__nav-link" href="home.html">Home</a><a class="page-footer__nav-link" href="about.html">About</a><a class="page-footer__nav-link" href="repertoire.html">Repertoire</a><a class="page-footer__nav-link" href="gallery.html">Gallery</a><a class="page-footer__nav-link page-footer__nav-link_selected" href="#">Sheet Music</a>
                 </nav>
                 <div class="widgets">
                     <div class="widget widget_social">
