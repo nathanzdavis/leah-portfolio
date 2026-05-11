@@ -275,17 +275,7 @@ a:hover {
     transition: all .3s;
 }
 
-.page-header__nav-link3 {
-    transform: translateY(5px);
-}
-
-.page-header__nav-link2 {
-    width: 55px;
-    height: 55px;
-    border: 2px solid #000;
-    box-sizing: border-box;
-    align-items: center;
-    justify-content: center;
+.page-header__nav-link:hover {
 }
 
 .page-header__nav-link_selected {

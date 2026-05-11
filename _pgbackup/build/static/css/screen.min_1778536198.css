@@ -267,7 +267,6 @@ a:hover {
 }
 
 .page-header__nav-link {
-    font-size: 16px;
     color: #606060;
     text-transform: uppercase;
     -webkit-transition: all .3s;
@@ -275,17 +274,7 @@ a:hover {
     transition: all .3s;
 }
 
-.page-header__nav-link3 {
-    transform: translateY(5px);
-}
-
-.page-header__nav-link2 {
-    width: 55px;
-    height: 55px;
-    border: 2px solid #000;
-    box-sizing: border-box;
-    align-items: center;
-    justify-content: center;
+.page-header__nav-link:hover {
 }
 
 .page-header__nav-link_selected {
@@ -694,6 +683,7 @@ a:hover {
 }
 
 .widget_contact {
+    color: #818181;
     text-align: right;
     float: left;
     width: 26.571428571428573%;
@@ -742,7 +732,7 @@ a:hover {
 }
 
 .widget__text {
-    color: #818181;
+    color: #606060;
     line-height: 16px;
 }
 
@@ -750,7 +740,7 @@ a:hover {
     text-align: center;
     font-size: 15px;
     line-height: 22px;
-    color: #818181;
+    color: #606060;
 }
 
 @media screen and (max-width:960px){
