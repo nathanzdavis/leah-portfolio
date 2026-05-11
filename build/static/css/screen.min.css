@@ -276,7 +276,13 @@ a:hover {
 }
 
 .page-header__nav-link3 {
-    transform: translateY(5px) translateX(-3px);
+    transform: translateY(5px) translateX(-1px);
+}
+
+@media (max-width: 600px) {
+    .page-header__nav-link3 {
+        transform: translateY(5px) translateX(-3px);
+    }
 }
 
 .page-header__nav-link2 {

@@ -267,6 +267,7 @@ a:hover {
 }
 
 .page-header__nav-link {
+    font-size: 16px;
     color: #606060;
     text-transform: uppercase;
     -webkit-transition: all .3s;
@@ -274,7 +275,17 @@ a:hover {
     transition: all .3s;
 }
 
-.page-header__nav-link:hover {
+.page-header__nav-link3 {
+    transform: translateY(5px) translateX(-1px);
+}
+
+.page-header__nav-link2 {
+    width: 55px;
+    height: 55px;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
 }
 
 .page-header__nav-link_selected {
@@ -739,7 +750,7 @@ a:hover {
     text-align: center;
     font-size: 15px;
     line-height: 22px;
-    color: #606060;
+    color: #818181;
 }
 
 @media screen and (max-width:960px){
