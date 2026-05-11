@@ -341,6 +341,19 @@ a:hover {
     font-family: 'Aboreto', cursive;
 }
 
+.promo__slogan2 {
+    display: flex;
+    padding-bottom: 75px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+    line-height: 1.2;
+    color: #fff;
+    font-family: 'Aboreto', cursive;
+    color: #7b94c7;
+    font-size: 32px;
+}
+
 .promo__button {
     display: block;
     width: 270px;
@@ -378,7 +391,7 @@ a:hover {
     display: flex;
     justify-content: center;
     gap: 75px;
-    padding: 100px;
+    padding: 100px 100px 50px 100px;
     flex-wrap: wrap;
 
     /* important for mobile */

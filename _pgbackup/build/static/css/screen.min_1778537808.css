@@ -267,6 +267,7 @@ a:hover {
 }
 
 .page-header__nav-link {
+    font-size: 16px;
     color: #606060;
     text-transform: uppercase;
     -webkit-transition: all .3s;
@@ -274,7 +275,23 @@ a:hover {
     transition: all .3s;
 }
 
-.page-header__nav-link:hover {
+.page-header__nav-link3 {
+    transform: translateY(5px);
+}
+
+@media (max-width: 600px) {
+    .page-header__nav-link3 {
+        transform: translateY(5px) translateX(-3px);
+    }
+}
+
+.page-header__nav-link2 {
+    width: 55px;
+    height: 55px;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
 }
 
 .page-header__nav-link_selected {
@@ -318,6 +335,14 @@ a:hover {
 }
 
 .promo__slogan {
+    margin-top: 15px;
+    line-height: 1.2;
+    color: #fff;
+    font-family: 'Aboreto', cursive;
+}
+
+.promo__slogan2 {
+    align-items: center;
     margin-top: 15px;
     line-height: 1.2;
     color: #fff;
