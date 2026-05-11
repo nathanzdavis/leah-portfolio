@@ -360,8 +360,8 @@ a:hover {
 .services-images {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    padding: 40px;
+    gap: 75px;
+    padding: 100px;
 }
 
 .services-images img {
@@ -690,7 +690,8 @@ a:hover {
     width: 40px;
     height: 40px;
     margin: 0 10px 0 0;
-    background: url(../images/soc-icon-sprite.png) no-repeat;
+    background: url(../images/socials.png) no-repeat;
+    background-color: transparent;
     font-size: 0;
     overflow: hidden;
     white-space: nowrap;
@@ -708,15 +709,15 @@ a:hover {
 }
 
 .widget__icon_fb {
-    background-position: 0 0;
+    background-position: -25px -22px;
 }
 
 .widget__icon_tw {
-    background-position: -41px 0;
+    background-position: -90px -21px;
 }
 
 .widget__icon_gplus {
-    background-position: -82px 0;
+    background-position: -155px -21px;
 }
 
 .widget__title {

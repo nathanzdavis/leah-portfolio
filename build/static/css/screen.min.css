@@ -362,10 +362,13 @@ a:hover {
     justify-content: center;
     gap: 75px;
     padding: 100px;
+    flex-wrap: wrap;
+
+    /* important for mobile */
 }
 
 .services-images img {
-    max-width: 30%;
+    max-width: 300px;
     height: auto;
     box-sizing: border-box;
 }

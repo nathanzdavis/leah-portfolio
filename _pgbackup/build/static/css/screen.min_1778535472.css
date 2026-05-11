@@ -360,14 +360,24 @@ a:hover {
 .services-images {
     display: flex;
     justify-content: center;
-    gap: 100px;
-    padding: 150px;
+    gap: 75px;
+    padding: 15px;
+    flex-wrap: wrap;
+
+    /* important for mobile */
 }
 
 .services-images img {
-    max-width: 30%;
+    width: 30%;
+    max-width: 300px;
+
+    /* optional safety cap */
     height: auto;
-    box-sizing: border-box;
+    flex-shrink: 0;
+
+    /* prevents squishing */
+    object-fit: contain;
+    display: block;
 }
 
 .services:after {
@@ -690,7 +700,8 @@ a:hover {
     width: 40px;
     height: 40px;
     margin: 0 10px 0 0;
-    background: url(../images/soc-icon-sprite.png) no-repeat;
+    background: url(../images/socials.png) no-repeat;
+    background-color: transparent;
     font-size: 0;
     overflow: hidden;
     white-space: nowrap;
@@ -708,15 +719,15 @@ a:hover {
 }
 
 .widget__icon_fb {
-    background-position: 0 0;
+    background-position: -25px -22px;
 }
 
 .widget__icon_tw {
-    background-position: -41px 0;
+    background-position: -90px -21px;
 }
 
 .widget__icon_gplus {
-    background-position: -82px 0;
+    background-position: -155px -21px;
 }
 
 .widget__title {
