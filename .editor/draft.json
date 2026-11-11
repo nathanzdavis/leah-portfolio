@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 0,
-  "updatedAt": "2026-11-11T03:37:08.452Z",
+  "updatedAt": "2026-11-11T03:37:15.698Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -502,6 +502,10 @@
                           "content": "\n                "
                         },
                         {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
                           "tagName": "h1",
                           "type": "text",
                           "droppable": true,
@@ -515,10 +519,6 @@
                               "content": "Leah Mosier"
                             }
                           ]
-                        },
-                        {
-                          "type": "textnode",
-                          "content": "\n                "
                         },
                         {
                           "tagName": "h2",
