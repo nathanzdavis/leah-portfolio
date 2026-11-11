@@ -51,9 +51,9 @@ function renderNode(node, key, context) {
   if (tag === 'nav' && classes.includes('page-footer__nav')) {
     return <nav key={reactKey} {...elementAttrs}>{context.pages.filter(p=>p.navVisible).map(p=><a key={p.id} className={`page-footer__nav-link ${p.slug===context.slug?'page-footer__nav-link_selected':''}`} href={p.slug==='home'?'/':`/${p.slug}`}>{p.title.split(' | ')[0]}</a>)}</nav>;
   }
-  if (tag === 'footer' && classes.includes('page-footer')) {
+  if (classes.includes('page-footer__inner')) {
     const children = Array.isArray(node.components) ? node.components.map((child, index) => renderNode(child, `${key}-${index}`, context)) : (node.content || node.components || null);
-    return <footer key={reactKey} {...elementAttrs}>{children}<a className="page-footer__editor-link" href="/editor" aria-label="Open website editor">Editor</a></footer>;
+    return <div key={reactKey} {...elementAttrs}>{children}<a className="page-footer__editor-link" href="/editor" aria-label="Open website editor">Editor</a></div>;
   }
   if (voidTags.has(tag)) return React.createElement(tag, attrs);
   const children = Array.isArray(node.components) ? node.components.map((child, index) => renderNode(child, `${key}-${index}`, context)) : (node.content || node.components || null);
