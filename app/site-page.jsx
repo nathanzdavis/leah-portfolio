@@ -16,7 +16,7 @@ export default async function SitePage({ slug }) {
   return <>
     {found.meta.cssFiles.map((href) => <link key={href} rel="stylesheet" href={href} />)}
     <style dangerouslySetInnerHTML={{ __html: projectCss(doc.projectData) }} />
-    <PublicRenderer component={found.page.component} pages={doc.pages} slug={found.meta.slug} />
+    <PublicRenderer component={found.component} pages={doc.pages} slug={found.meta.slug} />
     <PublicInteractions />
   </>;
 }

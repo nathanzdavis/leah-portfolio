@@ -49,7 +49,11 @@ function renderNode(node, key, context) {
     return <nav key={reactKey} {...elementAttrs}><div className="page-header__nav-link2"><a className="page-header__nav-link3" href="/" style={{fontWeight:'bold',fontSize:26,color:'#3a3a3a',fontFamily:'Aguafina Script, cursive'}}>LM</a></div><span>{context.pages.filter(p=>p.navVisible).map(p=><a key={p.id} className={`page-header__nav-link ${p.slug===context.slug?'page-header__nav-link_selected':''}`} href={p.slug==='home'?'/':`/${p.slug}`}>{p.title.split(' | ')[0]}</a>)}</span></nav>;
   }
   if (tag === 'nav' && classes.includes('page-footer__nav')) {
-    return <nav key={reactKey} {...elementAttrs}>{context.pages.filter(p=>p.navVisible).map(p=><a key={p.id} className={`page-footer__nav-link ${p.slug===context.slug?'page-footer__nav-link_selected':''}`} href={p.slug==='home'?'/':`/${p.slug}`}>{p.title.split(' | ')[0]}</a>)}<a className="page-footer__nav-link" href="/editor" aria-label="Open website editor">Editor</a></nav>;
+    return <nav key={reactKey} {...elementAttrs}>{context.pages.filter(p=>p.navVisible).map(p=><a key={p.id} className={`page-footer__nav-link ${p.slug===context.slug?'page-footer__nav-link_selected':''}`} href={p.slug==='home'?'/':`/${p.slug}`}>{p.title.split(' | ')[0]}</a>)}</nav>;
+  }
+  if (tag === 'footer' && classes.includes('page-footer')) {
+    const children = Array.isArray(node.components) ? node.components.map((child, index) => renderNode(child, `${key}-${index}`, context)) : (node.content || node.components || null);
+    return <footer key={reactKey} {...elementAttrs}>{children}<a className="page-footer__editor-link" href="/editor" aria-label="Open website editor">Editor</a></footer>;
   }
   if (voidTags.has(tag)) return React.createElement(tag, attrs);
   const children = Array.isArray(node.components) ? node.components.map((child, index) => renderNode(child, `${key}-${index}`, context)) : (node.content || node.components || null);
