@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 1,
-  "updatedAt": "2026-11-11T04:08:44.538Z",
+  "updatedAt": "2026-11-11T04:09:07.982Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -274,38 +274,6 @@
         "style": {
           "width": "232px"
         }
-      },
-      {
-        "selectors": [
-          "#ik937"
-        ],
-        "style": {
-          "left": "169px",
-          "top": "277px",
-          "position": "absolute",
-          "width": "1024px",
-          "height": "109px"
-        }
-      },
-      {
-        "selectors": [
-          "promo__title"
-        ],
-        "style": {
-          "text-align": "center"
-        }
-      },
-      {
-        "selectors": [
-          "#igq93"
-        ],
-        "style": {
-          "left": "149px",
-          "top": "391px",
-          "position": "absolute",
-          "width": "1024px",
-          "height": "28.796875px"
-        }
       }
     ],
     "pages": [
@@ -524,6 +492,7 @@
                 },
                 {
                   "tagName": "section",
+                  "resizable": true,
                   "classes": [
                     "promo"
                   ],
@@ -533,6 +502,22 @@
                       "content": "\n            "
                     },
                     {
+                      "tagName": "h1",
+                      "type": "text",
+                      "droppable": true,
+                      "resizable": true,
+                      "classes": [
+                        "promo__title"
+                      ],
+                      "components": [
+                        {
+                          "type": "textnode",
+                          "content": "Leah Mosier"
+                        }
+                      ]
+                    },
+                    {
+                      "resizable": true,
                       "classes": [
                         "promo__inner"
                       ],
@@ -540,24 +525,6 @@
                         {
                           "type": "textnode",
                           "content": "\n                "
-                        },
-                        {
-                          "tagName": "h1",
-                          "type": "text",
-                          "droppable": true,
-                          "resizable": true,
-                          "classes": [
-                            "promo__title"
-                          ],
-                          "attributes": {
-                            "id": "ik937"
-                          },
-                          "components": [
-                            {
-                              "type": "textnode",
-                              "content": "Leah Mosier"
-                            }
-                          ]
                         },
                         {
                           "type": "textnode",
@@ -571,9 +538,6 @@
                           "classes": [
                             "promo__slogan"
                           ],
-                          "attributes": {
-                            "id": "igq93"
-                          },
                           "components": [
                             {
                               "type": "textnode",
