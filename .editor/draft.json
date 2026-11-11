@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 0,
-  "updatedAt": "2026-11-11T03:45:35.162Z",
+  "updatedAt": "2026-11-11T03:47:46.438Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -656,6 +656,7 @@
                       "content": "\n            "
                     },
                     {
+                      "resizable": true,
                       "classes": [
                         "page-footer__inner"
                       ],
@@ -788,6 +789,7 @@
                               "content": "\n                    "
                             },
                             {
+                              "resizable": true,
                               "classes": [
                                 "widget",
                                 "widget_social"
@@ -812,12 +814,14 @@
                                 },
                                 {
                                   "type": "link",
+                                  "droppable": true,
+                                  "resizable": true,
                                   "classes": [
                                     "widget__icon",
                                     "widget__icon_tw"
                                   ],
                                   "attributes": {
-                                    "href": "https://www.instagram.com/leah.mosier/"
+                                    "href": "https://www.instagram.com/leahmmusic04/"
                                   },
                                   "components": [
                                     {
@@ -942,6 +946,7 @@
                           "content": "\n                "
                         },
                         {
+                          "resizable": true,
                           "classes": [
                             "copyright"
                           ],
