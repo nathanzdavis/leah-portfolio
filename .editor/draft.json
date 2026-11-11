@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 1,
-  "updatedAt": "2026-11-11T04:09:07.982Z",
+  "updatedAt": "2026-11-11T04:09:45.638Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -274,6 +274,30 @@
         "style": {
           "width": "232px"
         }
+      },
+      {
+        "selectors": [
+          "#i2fqh"
+        ],
+        "style": {
+          "left": "158px",
+          "top": "495px",
+          "position": "absolute",
+          "width": "1024px",
+          "height": "28.796875px"
+        }
+      },
+      {
+        "selectors": [
+          "#ipulc"
+        ],
+        "style": {
+          "left": "12px",
+          "top": "339px",
+          "position": "absolute",
+          "width": "1340px",
+          "height": "109px"
+        }
       }
     ],
     "pages": [
@@ -509,6 +533,9 @@
                       "classes": [
                         "promo__title"
                       ],
+                      "attributes": {
+                        "id": "ipulc"
+                      },
                       "components": [
                         {
                           "type": "textnode",
@@ -538,6 +565,9 @@
                           "classes": [
                             "promo__slogan"
                           ],
+                          "attributes": {
+                            "id": "i2fqh"
+                          },
                           "components": [
                             {
                               "type": "textnode",
