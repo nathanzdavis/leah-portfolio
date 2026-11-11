@@ -1,5 +1,20 @@
 {
-  "rewrites": [
-    { "source": "/", "destination": "/home.html" }
-  ]
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/home.html", "destination": "/home", "permanent": true },
+    { "source": "/about.html", "destination": "/about", "permanent": true },
+    { "source": "/repertoire.html", "destination": "/repertoire", "permanent": true },
+    { "source": "/gallery.html", "destination": "/gallery", "permanent": true },
+    { "source": "/sheet-music.html", "destination": "/sheet-music", "permanent": true }
+  ],
+  "headers": [{
+    "source": "/(.*)",
+    "headers": [
+      { "key": "X-Content-Type-Options", "value": "nosniff" },
+      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+      { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+    ]
+  }]
 }

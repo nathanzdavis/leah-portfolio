@@ -1,0 +1,2 @@
+import SitePage from './site-page';
+export default function Home() { return <SitePage slug="home" />; }

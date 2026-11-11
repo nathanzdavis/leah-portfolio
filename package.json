@@ -1,31 +1,24 @@
 {
-  "name": "general-frontend-boilerplate",
-  "description": "Project template based on Grunt task runner",
+  "name": "leah-portfolio",
+  "version": "2.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "node --test tests/*.test.mjs",
+    "import:legacy": "node scripts/import-legacy.mjs",
+    "password:hash": "node scripts/hash-password.mjs"
+  },
+  "dependencies": {
+    "grapesjs": "^0.22.13",
+    "next": "^16.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "zod": "^4.1.12"
+  },
   "devDependencies": {
-    "@babel/core": "^7.3.3",
-    "@babel/preset-env": "^7.3.1",
-    "autoprefixer": "^9.4.7",
-    "grunt": "^0.4.5",
-    "grunt-babel": "^8.0.0",
-    "grunt-browser-sync": "^2.2.0",
-    "grunt-combine-media-queries": "^1.0.20",
-    "grunt-contrib-clean": "^2.0.0",
-    "grunt-contrib-htmlmin": "^3.0.0",
-    "grunt-contrib-imagemin": "^3.1.0",
-    "grunt-contrib-pug": "^2.0.0",
-    "grunt-contrib-sass": "^1.0.0",
-    "grunt-contrib-stylus": "^1.2.0",
-    "grunt-contrib-uglify": "^4.0.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-newer": "^1.2.0",
-    "grunt-postcss": "^0.9.0",
-    "grunt-rigger": "^0.6.0",
-    "grunt-rollup": "^9.0.0",
-    "grunt-spritesmith": "^6.3.1",
-    "grunt-sync": "^0.8.0",
-    "load-grunt-config": "^1.0.2",
-    "postcss-csso": "^3.0.0",
-    "rollup": "^1.2.2",
-    "rollup-plugin-babel": "^4.3.2"
+    "cheerio": "^1.1.2"
   }
 }
