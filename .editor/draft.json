@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 0,
-  "updatedAt": "2026-11-11T03:43:43.250Z",
+  "updatedAt": "2026-11-11T03:43:48.994Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -884,6 +884,21 @@
                               "content": "\n                    "
                             },
                             {
+                              "tagName": "p",
+                              "type": "text",
+                              "droppable": true,
+                              "resizable": true,
+                              "classes": [
+                                "widget__text"
+                              ],
+                              "components": [
+                                {
+                                  "type": "textnode",
+                                  "content": "leahmmosiermusic@gmail.com"
+                                }
+                              ]
+                            },
+                            {
                               "classes": [
                                 "widget",
                                 "widget_contact"
@@ -909,21 +924,6 @@
                                 {
                                   "type": "textnode",
                                   "content": "\n                        "
-                                },
-                                {
-                                  "tagName": "p",
-                                  "type": "text",
-                                  "droppable": true,
-                                  "resizable": true,
-                                  "classes": [
-                                    "widget__text"
-                                  ],
-                                  "components": [
-                                    {
-                                      "type": "textnode",
-                                      "content": "leahmmosiermusic@gmail.com"
-                                    }
-                                  ]
                                 },
                                 {
                                   "type": "textnode",
