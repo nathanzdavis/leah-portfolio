@@ -9,11 +9,19 @@ function classNameOf(component) {
   return classes.map((item) => typeof item === 'string' ? item : item.name || item.label || '').filter(Boolean).join(' ');
 }
 
+function reactStyle(style) {
+  return Object.fromEntries(Object.entries(style || {}).map(([key, value]) => {
+    if (key.startsWith('--')) return [key, value];
+    const camel = key.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase()).replace(/^ms-/, 'ms');
+    return [camel, value];
+  }));
+}
+
 function safeAttributes(component) {
   const source = { ...(component.attributes || {}) };
   const className = classNameOf(component);
   if (className) source.className = className;
-  if (component.style && Object.keys(component.style).length) source.style = component.style;
+  if (component.style && Object.keys(component.style).length) source.style = reactStyle(component.style);
   if (component.id) source.id = component.id;
   const attrs = {};
   for (const [key, value] of Object.entries(source)) {
