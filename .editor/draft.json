@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 1,
-  "updatedAt": "2026-11-11T04:16:12.685Z",
+  "updatedAt": "2026-11-11T04:16:42.024Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -300,6 +300,18 @@
           "position": "absolute",
           "width": "1340px",
           "height": "109px"
+        }
+      },
+      {
+        "selectors": [
+          "#iri5q"
+        ],
+        "style": {
+          "left": "144px",
+          "top": "1700px",
+          "position": "absolute",
+          "width": "272.078125px",
+          "height": "80px"
         }
       }
     ],
@@ -736,6 +748,8 @@
                             },
                             {
                               "type": "link",
+                              "droppable": true,
+                              "resizable": true,
                               "classes": [
                                 "page-footer__nav-link"
                               ],
@@ -755,6 +769,8 @@
                             },
                             {
                               "type": "link",
+                              "droppable": true,
+                              "resizable": true,
                               "classes": [
                                 "page-footer__nav-link"
                               ],
@@ -774,6 +790,8 @@
                             },
                             {
                               "type": "link",
+                              "droppable": true,
+                              "resizable": true,
                               "classes": [
                                 "page-footer__nav-link"
                               ],
@@ -793,6 +811,8 @@
                             },
                             {
                               "type": "link",
+                              "droppable": true,
+                              "resizable": true,
                               "classes": [
                                 "page-footer__nav-link"
                               ],
@@ -832,6 +852,9 @@
                                 "widget",
                                 "widget_social"
                               ],
+                              "attributes": {
+                                "id": "iri5q"
+                              },
                               "components": [
                                 {
                                   "type": "textnode",
@@ -940,6 +963,8 @@
                                 {
                                   "tagName": "h3",
                                   "type": "text",
+                                  "droppable": true,
+                                  "resizable": true,
                                   "classes": [
                                     "widget__title"
                                   ],
