@@ -8,3 +8,6 @@ bower_components/
 .editor/draft.json
 .editor/auth.json
 .editor/publish-lock.json
+
+.vercel
+.env*
