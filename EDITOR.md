@@ -17,4 +17,6 @@ Never prefix secrets with `NEXT_PUBLIC_`. Local development can persist to `.edi
 
 Edits autosave to `editor-drafts`. Publish validates the document, commits `content/site.json` to `master`, and the existing GitHub integration triggers Vercel. The editor then polls Vercel by commit SHA. History restores an old document into the draft without rewriting Git history.
 
+The Account button changes the editor password. The replacement scrypt hash is encrypted with AES-256-GCM using `EDITOR_SESSION_SECRET` and stored on the editor draft branch. Plaintext passwords are never persisted or committed. Rotating `EDITOR_SESSION_SECRET` requires resetting the initial `EDITOR_PASSWORD_HASH` because it also protects the saved credential.
+
 The legacy `build/` and `dev/` folders remain as a migration reference. Do not run `npm run import:legacy` after real editor changes have been published.

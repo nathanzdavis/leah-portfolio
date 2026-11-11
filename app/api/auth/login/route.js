@@ -9,7 +9,7 @@ export async function POST(request) {
   if (record.reset < now) { record.count = 0; record.reset = now + 15 * 60_000; }
   if (record.count >= 8) return NextResponse.json({ error: 'Too many attempts. Try again later.' }, { status: 429 });
   const { password } = await request.json();
-  if (!verifyPassword(String(password || ''))) { record.count += 1; attempts.set(ip, record); return NextResponse.json({ error: 'Incorrect password.' }, { status: 401 }); }
+  if (!await verifyPassword(String(password || ''))) { record.count += 1; attempts.set(ip, record); return NextResponse.json({ error: 'Incorrect password.' }, { status: 401 }); }
   attempts.delete(ip); await setSessionCookie();
   return NextResponse.json({ ok: true });
 }
