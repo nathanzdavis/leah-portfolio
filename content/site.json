@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": 1,
-  "updatedAt": "2026-11-11T03:48:02.708Z",
+  "revision": 2,
+  "updatedAt": "2026-11-24T15:19:10.005Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -272,7 +272,46 @@
           "widget__text"
         ],
         "style": {
-          "width": "232px"
+          "width": "270px",
+          "top": "1736px",
+          "left": "899px",
+          "text-align": "right"
+        }
+      },
+      {
+        "selectors": [
+          "#i2fqh"
+        ],
+        "style": {
+          "left": "158px",
+          "top": "495px",
+          "position": "absolute",
+          "width": "1024px",
+          "height": "28.796875px"
+        }
+      },
+      {
+        "selectors": [
+          "#ipulc"
+        ],
+        "style": {
+          "left": "0px",
+          "top": "386px",
+          "position": "absolute",
+          "width": "1340px",
+          "height": "109px"
+        }
+      },
+      {
+        "selectors": [
+          "promo"
+        ],
+        "style": {
+          "height": "200px",
+          "top": "225px",
+          "left": "0px",
+          "position": "static",
+          "font-family": "Arial, Helvetica, sans-serif"
         }
       }
     ],
@@ -492,6 +531,7 @@
                 },
                 {
                   "tagName": "section",
+                  "resizable": true,
                   "classes": [
                     "promo"
                   ],
@@ -501,6 +541,25 @@
                       "content": "\n            "
                     },
                     {
+                      "tagName": "h1",
+                      "type": "text",
+                      "droppable": true,
+                      "resizable": true,
+                      "classes": [
+                        "promo__title"
+                      ],
+                      "attributes": {
+                        "id": "ipulc"
+                      },
+                      "components": [
+                        {
+                          "type": "textnode",
+                          "content": "Leah Mosier"
+                        }
+                      ]
+                    },
+                    {
+                      "resizable": true,
                       "classes": [
                         "promo__inner"
                       ],
@@ -510,30 +569,20 @@
                           "content": "\n                "
                         },
                         {
-                          "tagName": "h1",
-                          "type": "text",
-                          "droppable": true,
-                          "resizable": true,
-                          "classes": [
-                            "promo__title"
-                          ],
-                          "components": [
-                            {
-                              "type": "textnode",
-                              "content": "Leah Mosier"
-                            }
-                          ]
-                        },
-                        {
                           "type": "textnode",
                           "content": "\n                "
                         },
                         {
                           "tagName": "h2",
                           "type": "text",
+                          "droppable": true,
+                          "resizable": true,
                           "classes": [
                             "promo__slogan"
                           ],
+                          "attributes": {
+                            "id": "i2fqh"
+                          },
                           "components": [
                             {
                               "type": "textnode",
@@ -565,6 +614,7 @@
                       "content": "\n            "
                     },
                     {
+                      "resizable": true,
                       "classes": [
                         "services-images"
                       ],
@@ -647,6 +697,7 @@
                 },
                 {
                   "tagName": "footer",
+                  "resizable": true,
                   "classes": [
                     "page-footer"
                   ],
@@ -698,6 +749,8 @@
                             },
                             {
                               "type": "link",
+                              "droppable": true,
+                              "resizable": true,
                               "classes": [
                                 "page-footer__nav-link"
                               ],
@@ -717,6 +770,8 @@
                             },
                             {
                               "type": "link",
+                              "droppable": true,
+                              "resizable": true,
                               "classes": [
                                 "page-footer__nav-link"
                               ],
@@ -736,6 +791,8 @@
                             },
                             {
                               "type": "link",
+                              "droppable": true,
+                              "resizable": true,
                               "classes": [
                                 "page-footer__nav-link"
                               ],
@@ -755,6 +812,8 @@
                             },
                             {
                               "type": "link",
+                              "droppable": true,
+                              "resizable": true,
                               "classes": [
                                 "page-footer__nav-link"
                               ],
@@ -794,6 +853,9 @@
                                 "widget",
                                 "widget_social"
                               ],
+                              "attributes": {
+                                "id": "iri5q"
+                              },
                               "components": [
                                 {
                                   "type": "textnode",
@@ -802,6 +864,8 @@
                                 {
                                   "tagName": "h3",
                                   "type": "text",
+                                  "droppable": true,
+                                  "resizable": true,
                                   "classes": [
                                     "widget__title"
                                   ],
@@ -900,6 +964,8 @@
                                 {
                                   "tagName": "h3",
                                   "type": "text",
+                                  "droppable": true,
+                                  "resizable": true,
                                   "classes": [
                                     "widget__title"
                                   ],
