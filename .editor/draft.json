@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 3,
-  "updatedAt": "2026-11-27T22:26:34.275Z",
+  "updatedAt": "2026-11-27T22:26:35.971Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -382,6 +382,24 @@
                               ],
                               "components": [
                                 {
+                                  "type": "link",
+                                  "droppable": true,
+                                  "resizable": true,
+                                  "classes": [
+                                    "page-header__nav-link3"
+                                  ],
+                                  "attributes": {
+                                    "href": "home.html",
+                                    "id": "ir7t5"
+                                  },
+                                  "components": [
+                                    {
+                                      "type": "textnode",
+                                      "content": "\n                            LM "
+                                    }
+                                  ]
+                                },
+                                {
                                   "type": "textnode",
                                   "content": "\n                    "
                                 }
@@ -390,24 +408,6 @@
                             {
                               "type": "textnode",
                               "content": "\n                    "
-                            },
-                            {
-                              "type": "link",
-                              "droppable": true,
-                              "resizable": true,
-                              "classes": [
-                                "page-header__nav-link3"
-                              ],
-                              "attributes": {
-                                "href": "home.html",
-                                "id": "ir7t5"
-                              },
-                              "components": [
-                                {
-                                  "type": "textnode",
-                                  "content": "\n                            LM "
-                                }
-                              ]
                             },
                             {
                               "tagName": "span",
