@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 3,
-  "updatedAt": "2026-11-27T23:02:11.208Z",
+  "updatedAt": "2026-11-27T23:05:42.570Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -650,75 +650,84 @@
                       "content": "\n            "
                     },
                     {
-                      "name": "Gallery",
+                      "name": "Photo section",
                       "resizable": true,
                       "classes": [
                         "services-images"
                       ],
                       "attributes": {
-                        "data-editor-gallery": "true",
-                        "data-gallery-layout": "original",
-                        "data-gallery-shape": "original"
+                        "data-gallery-container": "home"
                       },
                       "components": [
                         {
-                          "type": "link",
+                          "name": "Gallery",
                           "attributes": {
-                            "href": "/static/images/NewPics/leah_new_2.jpg",
-                            "data-gallery-photo": "true"
+                            "data-editor-gallery": "true",
+                            "data-gallery-layout": "original",
+                            "data-gallery-shape": "original",
+                            "data-gallery-kind": "home"
                           },
                           "components": [
                             {
-                              "type": "image",
-                              "droppable": false,
-                              "resizable": {
-                                "ratioDefault": true
-                              },
+                              "type": "link",
                               "attributes": {
-                                "src": "/static/images/NewPics/leah_new_2.jpg",
-                                "id": "ikufg",
-                                "alt": ""
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "link",
-                          "attributes": {
-                            "href": "/static/images/NewPics/leah_new_3.jpg",
-                            "data-gallery-photo": "true"
-                          },
-                          "components": [
+                                "href": "/static/images/NewPics/leah_new_2.jpg",
+                                "data-gallery-photo": "true"
+                              },
+                              "components": [
+                                {
+                                  "type": "image",
+                                  "droppable": false,
+                                  "resizable": {
+                                    "ratioDefault": true
+                                  },
+                                  "attributes": {
+                                    "src": "/static/images/NewPics/leah_new_2.jpg",
+                                    "id": "ikufg",
+                                    "alt": ""
+                                  }
+                                }
+                              ]
+                            },
                             {
-                              "type": "image",
-                              "droppable": false,
-                              "resizable": {
-                                "ratioDefault": true
-                              },
+                              "type": "link",
                               "attributes": {
-                                "src": "/static/images/NewPics/leah_new_3.jpg",
-                                "id": "iu54l",
-                                "alt": ""
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "link",
-                          "attributes": {
-                            "href": "/static/images/NewPics/leah_new_4.jpg",
-                            "data-gallery-photo": "true"
-                          },
-                          "components": [
+                                "href": "/static/images/NewPics/leah_new_3.jpg",
+                                "data-gallery-photo": "true"
+                              },
+                              "components": [
+                                {
+                                  "type": "image",
+                                  "droppable": false,
+                                  "resizable": {
+                                    "ratioDefault": true
+                                  },
+                                  "attributes": {
+                                    "src": "/static/images/NewPics/leah_new_3.jpg",
+                                    "id": "iu54l",
+                                    "alt": ""
+                                  }
+                                }
+                              ]
+                            },
                             {
-                              "type": "image",
-                              "resizable": {
-                                "ratioDefault": 1
-                              },
+                              "type": "link",
                               "attributes": {
-                                "src": "/static/images/NewPics/leah_new_4.jpg",
-                                "alt": ""
-                              }
+                                "href": "/static/images/NewPics/leah_new_4.jpg",
+                                "data-gallery-photo": "true"
+                              },
+                              "components": [
+                                {
+                                  "type": "image",
+                                  "resizable": {
+                                    "ratioDefault": 1
+                                  },
+                                  "attributes": {
+                                    "src": "/static/images/NewPics/leah_new_4.jpg",
+                                    "alt": ""
+                                  }
+                                }
+                              ]
                             }
                           ]
                         },
