@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 3,
-  "updatedAt": "2026-11-27T22:39:38.063Z",
+  "updatedAt": "2026-11-27T22:39:43.626Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -322,16 +322,6 @@
         "style": {
           "transform": " translateX(-13px) translateY(-3px)",
           "translate": "13px 3px"
-        }
-      },
-      {
-        "selectors": [
-          "#i7g4dei2"
-        ],
-        "style": {
-          "padding": "24px",
-          "border": "1px solid #ddd",
-          "border-radius": "12px"
         }
       }
     ],
@@ -671,46 +661,16 @@
                         },
                         {
                           "type": "image",
-                          "droppable": false,
                           "resizable": {
-                            "ratioDefault": true
+                            "ratioDefault": 1
                           },
                           "attributes": {
-                            "src": "static/images/NewPics/leah_new_2.jpg",
-                            "id": "ikccstb"
+                            "src": "static/images/NewPics/leah_new_2.jpg"
                           }
                         },
                         {
                           "type": "textnode",
                           "content": "\n                "
-                        },
-                        {
-                          "tagName": "article",
-                          "attributes": {
-                            "id": "i7g4dei2"
-                          },
-                          "components": [
-                            {
-                              "tagName": "h3",
-                              "type": "text",
-                              "components": [
-                                {
-                                  "type": "textnode",
-                                  "content": "Card title"
-                                }
-                              ]
-                            },
-                            {
-                              "tagName": "p",
-                              "type": "text",
-                              "components": [
-                                {
-                                  "type": "textnode",
-                                  "content": "Card content"
-                                }
-                              ]
-                            }
-                          ]
                         },
                         {
                           "type": "image",
