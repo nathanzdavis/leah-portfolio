@@ -4,10 +4,10 @@ import { flushSync } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import BackgroundColorPicker from '@/components/BackgroundColorPicker';
 import { GalleryDialog, ShadowDialog } from '@/components/EditorVisualDialogs';
-import { findGallery, galleryPhoto, mediaSource, migrateGalleries, newGallery } from '@/lib/editor-gallery';
+import { galleryPhoto, mediaSource, migrateGalleries, newGallery } from '@/lib/editor-gallery';
 import { createDraftHistory, draftHistoryData } from '@/lib/editor-history';
 import { detachBackgroundImage, getBackgroundStyle, replaceImageTarget, uploadEditorMedia } from '@/lib/editor-media';
-import { blockIcons, isImage, labelSelectionTools, setupDragModes, setupGalleryHover } from '@/lib/editor-interactions';
+import { blockIcons, isImage, labelSelectionTools, setupDragModes, setupGalleryInteractions } from '@/lib/editor-interactions';
 import { readPosition, setPagePosition } from '@/lib/editor-position';
 
 const canvasStyles = ['/static/css/screen.min.css','/static/css/custom.min.css','/static/css/about.css','/static/css/repertoire.css','/static/css/gallery.css','/static/css/sheet-music.css','/static/css/editor-gallery.css','https://fonts.googleapis.com/css?family=Roboto+Slab|Aguafina+Script|Albert+Sans|Aboreto&display=swap'];
@@ -17,8 +17,6 @@ export default function EditorClient() {
   const mainRef = useRef(null);
   const readyRef = useRef(false);
   const [startupError, setStartupError] = useState('');
-  const imageInputRef = useRef(null);
-  const imageTargetRef = useRef(null);
   const undoRef = useRef(null);
   const saveQueue = useRef(Promise.resolve());
   const restoringRef = useRef(false);
@@ -120,23 +118,19 @@ export default function EditorClient() {
 
   function chooseImage(target) {
     const editor = editorRef.current;
-    if (editor && !target.background && isImage(target.model) && !findGallery(target.model)) {
-      editor.AssetManager.open({
-        types: ['image'],
-        accept: 'image/*',
-        select(asset) {
-          const src = mediaSource(asset.getSrc());
-          if (!src || editorRef.current !== editor || !target.model.parent()) return;
-          replaceImageTarget(target, src);
-          editor.AssetManager.close();
-          scheduleSave();
-          notify('Image replaced');
-        },
-      });
-      return;
-    }
-    imageTargetRef.current = target;
-    imageInputRef.current?.click();
+    if (!editor) return;
+    editor.AssetManager.open({
+      types: ['image'],
+      accept: 'image/*',
+      select(asset) {
+        const src = mediaSource(asset.getSrc());
+        if (!src || editorRef.current !== editor || !target.model.parent()) return;
+        replaceImageTarget(target, src);
+        editor.AssetManager.close();
+        scheduleSave();
+        notify(target.background ? 'Background image replaced' : 'Image replaced');
+      },
+    });
   }
 
   function galleryAssets() {
@@ -195,26 +189,6 @@ export default function EditorClient() {
     editorRef.current?.select(image);
     scheduleSave();
     notify('Background detached. Hold Shift and drag its move handle to move the image.');
-  }
-
-  async function changeImage(event) {
-    const file = event.target.files?.[0];
-    event.target.value = '';
-    const target = imageTargetRef.current;
-    if (!file || !target) return;
-    const editor = editorRef.current;
-    notify('Uploading image…');
-    try {
-      const asset = await uploadEditorMedia(file);
-      if (editor !== editorRef.current || !target.model.parent()) return;
-      if (asset.type !== 'image') throw new Error('Choose an image file.');
-      editor.AssetManager.add(asset);
-      replaceImageTarget(target, asset.src);
-      scheduleSave();
-      notify('Image replaced');
-    } catch (error) {
-      notify(error.message, true);
-    }
   }
 
   async function uploadAssets(event) {
@@ -281,7 +255,7 @@ export default function EditorClient() {
       editor.on('canvas:frame:load', ({ window: frameWindow }) => addSaveShortcut(frameWindow));
       addSaveShortcut(editor.Canvas.getWindow());
       setupDragModes(editor, notify);
-      setupGalleryHover(editor);
+      setupGalleryInteractions(editor);
       editor.Commands.add('core:undo', () => stepHistory(-1));
       editor.Commands.add('core:redo', () => stepHistory(1));
       editor.onReady(() => {
@@ -379,7 +353,7 @@ export default function EditorClient() {
           </button>
         </div>
       ))}</div></div><div id="layers" style={{display:leftTab==='layers'?'block':'none'}}/></div></aside>
-      <section className="canvas-shell"><input ref={imageInputRef} type="file" accept="image/*" hidden onChange={changeImage}/><div className="canvas-wrap" style={{maxWidth:device==='Tablet'?768:device==='Mobile'?390:'none'}}><div id="gjs"/></div></section>
+      <section className="canvas-shell"><div className="canvas-wrap" style={{maxWidth:device==='Tablet'?768:device==='Mobile'?390:'none'}}><div id="gjs"/></div></section>
       <aside className={`sidebar right ${inspectorOpen?'open':''}`}><SidebarResize side="right" mainRef={mainRef}/><div className="sidebar-tabs">{['styles','settings'].map(t=><button key={t} className={rightTab===t?'active':''} onClick={()=>setRightTab(t)}>{t==='styles'?'Design':'Settings'}</button>)}</div><div className="sidebar-body">{rightTab==='styles'&&position&&<PositionFields key={position.id}
         position={position} apply={applyPosition} copiedPosition={copiedPosition}
         onCopy={()=>{setCopiedPosition(position);notify('Position copied for use on another page.')}} />}

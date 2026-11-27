@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import grapesjs from 'grapesjs';
 import { migrateGalleries } from '../lib/editor-gallery.js';
-import { setupGalleryHover } from '../lib/editor-interactions.js';
+import { setupGalleryInteractions } from '../lib/editor-interactions.js';
 
 function collect(node, predicate) {
   return [
@@ -40,7 +40,7 @@ test('the existing photo groups migrate once and preserve photo order, captions 
   }
 });
 
-test('hover stays on the gallery while its photos remain individually selectable', () => {
+test('hover and selection resolve to the gallery rather than its photos', () => {
   const editor = grapesjs.init({ headless: true, storageManager: false });
   try {
     const [gallery, outside] = editor.addComponents([
@@ -52,15 +52,19 @@ test('hover stays on the gallery while its photos remain individually selectable
     const link = gallery.components().at(0);
     const photo = link.components().at(0);
     const model = editor.getModel();
-    setupGalleryHover(editor);
+    setupGalleryInteractions(editor);
     model.setHovered(photo, { useValid: true });
     assert.equal(model.getHovered(), gallery);
     model.setHovered(link, { useValid: true });
     assert.equal(model.getHovered(), gallery);
-    editor.select(photo);
-    assert.equal(editor.getSelected(), photo);
+    editor.select(photo, { useValid: true });
+    assert.equal(editor.getSelected(), gallery);
+    editor.select(link);
+    assert.equal(editor.getSelected(), gallery);
     model.setHovered(outside, { useValid: true });
     assert.equal(model.getHovered(), outside);
+    editor.select(outside);
+    assert.equal(editor.getSelected(), outside);
   } finally {
     editor.destroy();
   }
