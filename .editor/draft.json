@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 3,
-  "updatedAt": "2026-11-27T23:16:29.436Z",
+  "updatedAt": "2026-11-27T23:17:02.934Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -322,6 +322,14 @@
         "style": {
           "transform": " translateX(-13px) translateY(-3px)",
           "translate": "13px 3px"
+        }
+      },
+      {
+        "selectors": [
+          "#iw2xa"
+        ],
+        "style": {
+          "background-color": "transparent"
         }
       }
     ],
@@ -9260,6 +9268,9 @@
                 "background-position",
                 "background-size"
               ],
+              "attributes": {
+                "id": "ig0pcf2"
+              },
               "components": [
                 {
                   "type": "textnode",
@@ -9341,6 +9352,8 @@
                                 },
                                 {
                                   "type": "link",
+                                  "droppable": true,
+                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link"
                                   ],
@@ -9379,6 +9392,8 @@
                                 },
                                 {
                                   "type": "link",
+                                  "droppable": true,
+                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link"
                                   ],
@@ -9398,6 +9413,8 @@
                                 },
                                 {
                                   "type": "link",
+                                  "droppable": true,
+                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link",
                                     "page-header__nav-link_selected"
@@ -9418,6 +9435,8 @@
                                 },
                                 {
                                   "type": "link",
+                                  "droppable": true,
+                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link"
                                   ],
@@ -9461,6 +9480,7 @@
                 },
                 {
                   "tagName": "section",
+                  "resizable": true,
                   "classes": [
                     "gallery-hero"
                   ],
