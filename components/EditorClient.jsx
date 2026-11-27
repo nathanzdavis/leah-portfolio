@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import BackgroundColorPicker from '@/components/BackgroundColorPicker';
-import { getBackgroundStyle, replaceImageTarget, uploadEditorMedia } from '@/lib/editor-media';
+import { detachBackgroundImage, getBackgroundStyle, replaceImageTarget, uploadEditorMedia } from '@/lib/editor-media';
 import { blockIcons, isImage, labelSelectionTools, setupDragModes } from '@/lib/editor-interactions';
 
 const canvasStyles = ['/static/css/screen.min.css','/static/css/custom.min.css','/static/css/about.css','/static/css/repertoire.css','/static/css/gallery.css','/static/css/sheet-music.css','https://fonts.googleapis.com/css?family=Roboto+Slab|Aguafina+Script|Albert+Sans|Aboreto&display=swap'];
@@ -24,6 +24,14 @@ export default function EditorClient() {
   function chooseImage(target) {
     imageTargetRef.current = target;
     imageInputRef.current?.click();
+  }
+
+  function detachImage(model) {
+    const image = detachBackgroundImage(model);
+    if (!image) return;
+    editorRef.current?.select(image);
+    scheduleSave();
+    notify('Background detached. Hold Shift and drag its move handle to move the image.');
   }
 
   async function changeImage(event) {
@@ -80,7 +88,7 @@ export default function EditorClient() {
         const toolbar = editor.Canvas.getToolbarEl();
         const canvas = editor.Canvas.getElement();
         if (!toolbar || !canvas || toolbar.offsetParent === null) return;
-        labelSelectionTools(toolbar, editor.getSelected(), chooseImage, setColorTarget);
+        labelSelectionTools(toolbar, editor.getSelected(), chooseImage, setColorTarget, detachImage);
         const bar = toolbar.getBoundingClientRect();
         const bounds = canvas.getBoundingClientRect();
         const style = getComputedStyle(toolbar);

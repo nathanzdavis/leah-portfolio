@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import grapesjs from 'grapesjs';
 import { setupDragModes } from '../lib/editor-interactions.js';
-import { getImageTarget, publishedMedia, replaceImage, replaceImageTarget } from '../lib/editor-media.js';
+import { detachBackgroundImage, getImageTarget, publishedMedia, replaceImage, replaceImageTarget } from '../lib/editor-media.js';
 
 test('toolbar Shift enables unsnapped movement and normal drag stays in layout mode', () => {
   const editor = grapesjs.init({ headless: true, storageManager: false });
@@ -92,6 +92,40 @@ test('an empty div can gain a background image without losing its background col
     assert.equal(div.getStyle()['background-image'], 'url("/static/uploads/new.webp")');
     assert.equal(div.getStyle()['background-size'], 'cover');
     assert.equal(div.getStyle()['background-color'], '#d18966');
+  } finally {
+    editor.destroy();
+  }
+});
+
+test('detaching a section background makes a separate movable image behind the existing content', () => {
+  const editor = grapesjs.init({ headless: true, storageManager: false });
+  try {
+    const [section] = editor.addComponents({
+      tagName: 'section',
+      style: { 'background-color': '#d18966' },
+      components: [{ tagName: 'h1' }],
+    });
+    const [heading] = section.components().models;
+    const style = {
+      backgroundImage: 'url("https://example.com/api/editor/media?path=public%2Fstatic%2Fuploads%2Fhero.webp")',
+      backgroundPosition: '50% 15%',
+      backgroundSize: 'cover',
+      position: 'static',
+    };
+    section.getEl = () => ({ ownerDocument: {
+      baseURI: 'https://example.com/editor',
+      defaultView: { getComputedStyle: () => style },
+    } });
+    const image = detachBackgroundImage(section);
+    assert.equal(image.get('tagName'), 'img');
+    assert.equal(image.getAttributes().src, '/api/editor/media?path=public%2Fstatic%2Fuploads%2Fhero.webp');
+    assert.equal(image.getStyle()['object-position'], '50% 15%');
+    assert.equal(image.getStyle().position, 'absolute');
+    assert.equal(section.getStyle()['background-image'], 'none');
+    assert.equal(section.getStyle()['background-color'], '#d18966');
+    assert.deepEqual(section.components().models, [image, heading]);
+    assert.match(JSON.stringify(publishedMedia(editor.getProjectData())), /static\/uploads\/hero\.webp/);
+    assert.doesNotMatch(JSON.stringify(publishedMedia(editor.getProjectData())), /api\/editor\/media/);
   } finally {
     editor.destroy();
   }
