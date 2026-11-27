@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": 5,
-  "updatedAt": "2026-11-27T23:22:55.720Z",
+  "revision": 3,
+  "updatedAt": "2026-11-27T23:27:07.659Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -307,46 +307,11 @@
           "promo"
         ],
         "style": {
-          "height": "15px",
-          "top": "161px",
+          "height": "200%",
+          "top": "225px",
           "left": "0px",
           "position": "static",
-          "font-family": "Arial, Helvetica, sans-serif",
-          "width": "1333px"
-        }
-      },
-      {
-        "selectors": [
-          "#iehm4"
-        ],
-        "style": {
-          "transform": " translateX(-13px) translateY(-3px)",
-          "translate": "13px 3px"
-        }
-      },
-      {
-        "selectors": [
-          "#iw2xa"
-        ],
-        "style": {
-          "background-color": "transparent"
-        }
-      },
-      {
-        "selectors": [
-          "promo__title"
-        ],
-        "style": {
-          "position": "static",
-          "opacity": "1"
-        }
-      },
-      {
-        "selectors": [
-          "promo__slogan"
-        ],
-        "style": {
-          "position": "static"
+          "font-family": "Arial, Helvetica, sans-serif"
         }
       }
     ],
@@ -373,7 +338,6 @@
                 },
                 {
                   "tagName": "header",
-                  "resizable": true,
                   "classes": [
                     "page-header"
                   ],
@@ -393,14 +357,10 @@
                         },
                         {
                           "tagName": "nav",
-                          "resizable": true,
                           "classes": [
                             "nav",
                             "page-header__nav"
                           ],
-                          "attributes": {
-                            "id": "iybwg"
-                          },
                           "components": [
                             {
                               "type": "textnode",
@@ -411,18 +371,12 @@
                               "content": "\n                    "
                             },
                             {
-                              "resizable": true,
                               "classes": [
                                 "page-header__nav-link2"
                               ],
-                              "attributes": {
-                                "id": "iehm4"
-                              },
                               "components": [
                                 {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link3"
                                   ],
@@ -450,7 +404,6 @@
                             {
                               "tagName": "span",
                               "type": "text",
-                              "droppable": true,
                               "components": [
                                 {
                                   "type": "textnode",
@@ -458,8 +411,6 @@
                                 },
                                 {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link",
                                     "page-header__nav-link_selected"
@@ -475,15 +426,16 @@
                                   ]
                                 },
                                 {
+                                  "type": "textnode",
+                                  "content": " "
+                                },
+                                {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link"
                                   ],
                                   "attributes": {
-                                    "href": "about.html",
-                                    "id": "ii7g7"
+                                    "href": "about.html"
                                   },
                                   "components": [
                                     {
@@ -497,13 +449,7 @@
                                   "content": " "
                                 },
                                 {
-                                  "type": "textnode",
-                                  "content": " "
-                                },
-                                {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link"
                                   ],
@@ -589,9 +535,6 @@
                   "classes": [
                     "promo"
                   ],
-                  "attributes": {
-                    "id": "idhft"
-                  },
                   "components": [
                     {
                       "type": "textnode",
@@ -630,6 +573,24 @@
                           "content": "\n                "
                         },
                         {
+                          "tagName": "h2",
+                          "type": "text",
+                          "droppable": true,
+                          "resizable": true,
+                          "classes": [
+                            "promo__slogan"
+                          ],
+                          "attributes": {
+                            "id": "i2fqh"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "Cellist | Percussionist | Composer"
+                            }
+                          ]
+                        },
+                        {
                           "type": "textnode",
                           "content": "\n            "
                         }
@@ -638,24 +599,6 @@
                     {
                       "type": "textnode",
                       "content": "\n        "
-                    },
-                    {
-                      "tagName": "h2",
-                      "type": "text",
-                      "droppable": true,
-                      "resizable": true,
-                      "classes": [
-                        "promo__slogan"
-                      ],
-                      "attributes": {
-                        "id": "i2fqh"
-                      },
-                      "components": [
-                        {
-                          "type": "textnode",
-                          "content": "Cellist | Percussionist | Composer"
-                        }
-                      ]
                     }
                   ]
                 },
@@ -665,110 +608,55 @@
                 },
                 {
                   "tagName": "section",
-                  "resizable": true,
-                  "attributes": {
-                    "id": "ixr6v"
-                  },
                   "components": [
                     {
                       "type": "textnode",
                       "content": "\n            "
                     },
                     {
-                      "name": "Photo section",
                       "resizable": true,
                       "classes": [
                         "services-images"
                       ],
-                      "attributes": {
-                        "data-gallery-container": "home"
-                      },
                       "components": [
                         {
-                          "name": "Gallery",
-                          "resizable": true,
-                          "attributes": {
-                            "data-editor-gallery": "true",
-                            "data-gallery-layout": "original",
-                            "data-gallery-shape": "original",
-                            "data-gallery-kind": "home",
-                            "id": "iw2xa"
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
                           },
-                          "components": [
-                            {
-                              "type": "link",
-                              "attributes": {
-                                "href": "/static/images/NewPics/leah_new_2.jpg",
-                                "data-gallery-photo": "true"
-                              },
-                              "components": [
-                                {
-                                  "type": "image",
-                                  "droppable": false,
-                                  "resizable": {
-                                    "ratioDefault": true
-                                  },
-                                  "attributes": {
-                                    "src": "/static/images/NewPics/leah_new_2.jpg",
-                                    "id": "ikufg",
-                                    "alt": ""
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "type": "link",
-                              "attributes": {
-                                "href": "/static/images/NewPics/leah_new_3.jpg",
-                                "data-gallery-photo": "true"
-                              },
-                              "components": [
-                                {
-                                  "type": "image",
-                                  "droppable": false,
-                                  "resizable": {
-                                    "ratioDefault": true
-                                  },
-                                  "attributes": {
-                                    "src": "/static/images/NewPics/leah_new_3.jpg",
-                                    "id": "iu54l",
-                                    "alt": ""
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "type": "link",
-                              "attributes": {
-                                "href": "/static/images/NewPics/leah_new_4.jpg",
-                                "data-gallery-photo": "true"
-                              },
-                              "components": [
-                                {
-                                  "type": "image",
-                                  "resizable": {
-                                    "ratioDefault": 1
-                                  },
-                                  "attributes": {
-                                    "src": "/static/images/NewPics/leah_new_4.jpg",
-                                    "alt": ""
-                                  }
-                                }
-                              ]
-                            }
-                          ]
+                          "attributes": {
+                            "src": "static/images/NewPics/leah_new_2.jpg"
+                          }
                         },
                         {
                           "type": "textnode",
                           "content": "\n                "
                         },
                         {
-                          "type": "textnode",
-                          "content": "\n                "
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/NewPics/leah_new_3.jpg"
+                          }
                         },
                         {
                           "type": "textnode",
                           "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/NewPics/leah_new_4.jpg"
+                          }
                         },
                         {
                           "type": "textnode",
@@ -783,8 +671,6 @@
                     {
                       "tagName": "h2",
                       "type": "text",
-                      "droppable": true,
-                      "resizable": true,
                       "classes": [
                         "promo__slogan2"
                       ],
@@ -1221,7 +1107,6 @@
                               "content": "\n                    "
                             },
                             {
-                              "resizable": true,
                               "classes": [
                                 "page-header__nav-link2"
                               ],
@@ -1393,8 +1278,6 @@
                     {
                       "tagName": "h1",
                       "type": "text",
-                      "droppable": true,
-                      "resizable": true,
                       "classes": [
                         "about-hero__title"
                       ],
@@ -9287,9 +9170,6 @@
                 "background-position",
                 "background-size"
               ],
-              "attributes": {
-                "id": "ig0pcf2"
-              },
               "components": [
                 {
                   "type": "textnode",
@@ -9297,7 +9177,6 @@
                 },
                 {
                   "tagName": "header",
-                  "resizable": true,
                   "classes": [
                     "page-header"
                   ],
@@ -9371,8 +9250,6 @@
                                 },
                                 {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link"
                                   ],
@@ -9411,8 +9288,6 @@
                                 },
                                 {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link"
                                   ],
@@ -9432,8 +9307,6 @@
                                 },
                                 {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link",
                                     "page-header__nav-link_selected"
@@ -9454,8 +9327,6 @@
                                 },
                                 {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link"
                                   ],
@@ -9499,7 +9370,6 @@
                 },
                 {
                   "tagName": "section",
-                  "resizable": true,
                   "classes": [
                     "gallery-hero"
                   ],
@@ -9511,8 +9381,6 @@
                     {
                       "tagName": "h1",
                       "type": "text",
-                      "droppable": true,
-                      "resizable": true,
                       "classes": [
                         "gallery-hero__title"
                       ],
@@ -9535,7 +9403,6 @@
                 },
                 {
                   "tagName": "section",
-                  "resizable": true,
                   "classes": [
                     "gallery-section"
                   ],
@@ -9553,64 +9420,14 @@
                       "content": "\n            "
                     },
                     {
-                      "name": "Gallery",
-                      "resizable": true,
                       "classes": [
                         "picture-grid"
                       ],
-                      "attributes": {
-                        "data-editor-gallery": "true",
-                        "data-gallery-layout": "original",
-                        "data-gallery-shape": "original"
-                      },
                       "components": [
                         {
                           "type": "link",
                           "attributes": {
-                            "href": "/static/images/gallery/gallery1.jpg",
-                            "data-gallery-photo": "true"
-                          },
-                          "components": [
-                            {
-                              "type": "image",
-                              "droppable": false,
-                              "resizable": {
-                                "ratioDefault": true
-                              },
-                              "attributes": {
-                                "src": "/static/images/gallery/gallery1.jpg",
-                                "alt": "Performance 1",
-                                "id": "iunvzgc"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "link",
-                          "attributes": {
-                            "href": "/static/images/gallery/gallery2.jpg",
-                            "data-gallery-photo": "true"
-                          },
-                          "components": [
-                            {
-                              "type": "image",
-                              "droppable": false,
-                              "resizable": {
-                                "ratioDefault": true
-                              },
-                              "attributes": {
-                                "src": "/static/images/gallery/gallery2.jpg",
-                                "alt": "Performance 2",
-                                "id": "ifr9gxl"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "link",
-                          "attributes": {
-                            "href": "/static/images/gallery/gallery3.jpg",
-                            "data-gallery-photo": "true"
+                            "href": "#img1"
                           },
                           "components": [
                             {
@@ -9619,7 +9436,43 @@
                                 "ratioDefault": 1
                               },
                               "attributes": {
-                                "src": "/static/images/gallery/gallery3.jpg",
+                                "src": "static/images/gallery/gallery1.jpg",
+                                "alt": "Performance 1"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "link",
+                          "attributes": {
+                            "href": "#img2"
+                          },
+                          "components": [
+                            {
+                              "type": "image",
+                              "resizable": {
+                                "ratioDefault": 1
+                              },
+                              "attributes": {
+                                "src": "static/images/gallery/gallery2.jpg",
+                                "alt": "Performance 2"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "link",
+                          "attributes": {
+                            "href": "#img3"
+                          },
+                          "components": [
+                            {
+                              "type": "image",
+                              "resizable": {
+                                "ratioDefault": 1
+                              },
+                              "attributes": {
+                                "src": "static/images/gallery/gallery3.jpg",
                                 "alt": "Performance 3"
                               }
                             }
@@ -9628,50 +9481,7 @@
                         {
                           "type": "link",
                           "attributes": {
-                            "href": "/static/images/gallery/gallery4.jpg",
-                            "data-gallery-photo": "true"
-                          },
-                          "components": [
-                            {
-                              "type": "image",
-                              "droppable": false,
-                              "resizable": {
-                                "ratioDefault": true
-                              },
-                              "attributes": {
-                                "src": "/static/images/gallery/gallery4.jpg",
-                                "alt": "Performance 4",
-                                "id": "i6e2lkj"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "link",
-                          "attributes": {
-                            "href": "/static/images/gallery/gallery5.jpg",
-                            "data-gallery-photo": "true"
-                          },
-                          "components": [
-                            {
-                              "type": "image",
-                              "droppable": false,
-                              "resizable": {
-                                "ratioDefault": true
-                              },
-                              "attributes": {
-                                "src": "/static/images/gallery/gallery5.jpg",
-                                "alt": "Performance 5",
-                                "id": "ipy86tr"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "link",
-                          "attributes": {
-                            "href": "/static/images/gallery/gallery6.jpg",
-                            "data-gallery-photo": "true"
+                            "href": "#img4"
                           },
                           "components": [
                             {
@@ -9680,7 +9490,43 @@
                                 "ratioDefault": 1
                               },
                               "attributes": {
-                                "src": "/static/images/gallery/gallery6.jpg",
+                                "src": "static/images/gallery/gallery4.jpg",
+                                "alt": "Performance 4"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "link",
+                          "attributes": {
+                            "href": "#img5"
+                          },
+                          "components": [
+                            {
+                              "type": "image",
+                              "resizable": {
+                                "ratioDefault": 1
+                              },
+                              "attributes": {
+                                "src": "static/images/gallery/gallery5.jpg",
+                                "alt": "Performance 5"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "link",
+                          "attributes": {
+                            "href": "#img6"
+                          },
+                          "components": [
+                            {
+                              "type": "image",
+                              "resizable": {
+                                "ratioDefault": 1
+                              },
+                              "attributes": {
+                                "src": "static/images/gallery/gallery6.jpg",
                                 "alt": "Performance 6"
                               }
                             }
@@ -9689,8 +9535,7 @@
                         {
                           "type": "link",
                           "attributes": {
-                            "href": "/static/images/gallery/gallery7.jpg",
-                            "data-gallery-photo": "true"
+                            "href": "#img7"
                           },
                           "components": [
                             {
@@ -9699,7 +9544,7 @@
                                 "ratioDefault": 1
                               },
                               "attributes": {
-                                "src": "/static/images/gallery/gallery7.jpg",
+                                "src": "static/images/gallery/gallery7.jpg",
                                 "alt": "Performance 7"
                               }
                             }
@@ -9708,8 +9553,7 @@
                         {
                           "type": "link",
                           "attributes": {
-                            "href": "/static/images/gallery/gallery8.jpg",
-                            "data-gallery-photo": "true"
+                            "href": "#img8"
                           },
                           "components": [
                             {
@@ -9718,7 +9562,7 @@
                                 "ratioDefault": 1
                               },
                               "attributes": {
-                                "src": "/static/images/gallery/gallery8.jpg",
+                                "src": "static/images/gallery/gallery8.jpg",
                                 "alt": "Performance 8"
                               }
                             }
@@ -9727,8 +9571,7 @@
                         {
                           "type": "link",
                           "attributes": {
-                            "href": "/static/images/leah1.jpg",
-                            "data-gallery-photo": "true"
+                            "href": "#img9"
                           },
                           "components": [
                             {
@@ -9737,7 +9580,7 @@
                                 "ratioDefault": 1
                               },
                               "attributes": {
-                                "src": "/static/images/leah1.jpg",
+                                "src": "static/images/leah1.jpg",
                                 "alt": "Performance 9"
                               }
                             }
@@ -9746,8 +9589,7 @@
                         {
                           "type": "link",
                           "attributes": {
-                            "href": "/static/images/gallery/gallery9.jpg",
-                            "data-gallery-photo": "true"
+                            "href": "#img10"
                           },
                           "components": [
                             {
@@ -9756,7 +9598,7 @@
                                 "ratioDefault": 1
                               },
                               "attributes": {
-                                "src": "/static/images/gallery/gallery9.jpg",
+                                "src": "static/images/gallery/gallery9.jpg",
                                 "alt": "Performance 10"
                               }
                             }
@@ -9765,8 +9607,7 @@
                         {
                           "type": "link",
                           "attributes": {
-                            "href": "/static/images/gallery/gallery11.jpg",
-                            "data-gallery-photo": "true"
+                            "href": "#img11"
                           },
                           "components": [
                             {
@@ -9775,7 +9616,7 @@
                                 "ratioDefault": 1
                               },
                               "attributes": {
-                                "src": "/static/images/gallery/gallery11.jpg",
+                                "src": "static/images/gallery/gallery11.jpg",
                                 "alt": "Performance 11"
                               }
                             }
@@ -9784,20 +9625,17 @@
                         {
                           "type": "link",
                           "attributes": {
-                            "href": "/static/images/gallery/gallery12.jpg",
-                            "data-gallery-photo": "true"
+                            "href": "#img12"
                           },
                           "components": [
                             {
                               "type": "image",
-                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": true
+                                "ratioDefault": 1
                               },
                               "attributes": {
-                                "src": "/static/images/gallery/gallery12.jpg",
-                                "alt": "Performance 12",
-                                "id": "igzcgah"
+                                "src": "static/images/gallery/gallery12.jpg",
+                                "alt": "Performance 12"
                               }
                             }
                           ]
@@ -9805,20 +9643,17 @@
                         {
                           "type": "link",
                           "attributes": {
-                            "href": "/static/images/gallery/gallery13.jpg",
-                            "data-gallery-photo": "true"
+                            "href": "#img13"
                           },
                           "components": [
                             {
                               "type": "image",
-                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": true
+                                "ratioDefault": 1
                               },
                               "attributes": {
-                                "src": "/static/images/gallery/gallery13.jpg",
-                                "alt": "Performance 13",
-                                "id": "i9ju4qx"
+                                "src": "static/images/gallery/gallery13.jpg",
+                                "alt": "Performance 13"
                               }
                             }
                           ]
@@ -9826,20 +9661,17 @@
                         {
                           "type": "link",
                           "attributes": {
-                            "href": "/static/images/gallery/gallery14.jpg",
-                            "data-gallery-photo": "true"
+                            "href": "#img14"
                           },
                           "components": [
                             {
                               "type": "image",
-                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": true
+                                "ratioDefault": 1
                               },
                               "attributes": {
-                                "src": "/static/images/gallery/gallery14.jpg",
-                                "alt": "Performance 14",
-                                "id": "iudwp2t"
+                                "src": "static/images/gallery/gallery14.jpg",
+                                "alt": "Performance 14"
                               }
                             }
                           ]
@@ -9847,20 +9679,17 @@
                         {
                           "type": "link",
                           "attributes": {
-                            "href": "/static/images/gallery/gallery15.jpg",
-                            "data-gallery-photo": "true"
+                            "href": "#img15"
                           },
                           "components": [
                             {
                               "type": "image",
-                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": true
+                                "ratioDefault": 1
                               },
                               "attributes": {
-                                "src": "/static/images/gallery/gallery15.jpg",
-                                "alt": "Performance 14",
-                                "id": "inm4wge"
+                                "src": "static/images/gallery/gallery15.jpg",
+                                "alt": "Performance 14"
                               }
                             }
                           ]
@@ -9880,60 +9709,705 @@
                       "content": "\n            "
                     },
                     {
-                      "type": "textnode",
-                      "content": "\n            "
+                      "classes": [
+                        "lightbox"
+                      ],
+                      "attributes": {
+                        "id": "img1"
+                      },
+                      "components": [
+                        {
+                          "type": "link",
+                          "classes": [
+                            "close"
+                          ],
+                          "attributes": {
+                            "href": "javascript:void(0)"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "×"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/gallery/gallery1.jpg",
+                            "alt": "Performance 1"
+                          }
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
                     },
                     {
                       "type": "textnode",
                       "content": "\n            "
                     },
                     {
-                      "type": "textnode",
-                      "content": "\n            "
+                      "classes": [
+                        "lightbox"
+                      ],
+                      "attributes": {
+                        "id": "img2"
+                      },
+                      "components": [
+                        {
+                          "type": "link",
+                          "classes": [
+                            "close"
+                          ],
+                          "attributes": {
+                            "href": "javascript:void(0)"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "×"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/gallery/gallery2.jpg",
+                            "alt": "Performance 2"
+                          }
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
                     },
                     {
                       "type": "textnode",
                       "content": "\n            "
                     },
                     {
-                      "type": "textnode",
-                      "content": "\n            "
+                      "classes": [
+                        "lightbox"
+                      ],
+                      "attributes": {
+                        "id": "img3"
+                      },
+                      "components": [
+                        {
+                          "type": "link",
+                          "classes": [
+                            "close"
+                          ],
+                          "attributes": {
+                            "href": "javascript:void(0)"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "×"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/gallery/gallery3.jpg",
+                            "alt": "Performance 3"
+                          }
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
                     },
                     {
                       "type": "textnode",
                       "content": "\n            "
                     },
                     {
-                      "type": "textnode",
-                      "content": "\n            "
+                      "classes": [
+                        "lightbox"
+                      ],
+                      "attributes": {
+                        "id": "img4"
+                      },
+                      "components": [
+                        {
+                          "type": "link",
+                          "classes": [
+                            "close"
+                          ],
+                          "attributes": {
+                            "href": "javascript:void(0)"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "×"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/gallery/gallery4.jpg",
+                            "alt": "Performance 4"
+                          }
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
                     },
                     {
                       "type": "textnode",
                       "content": "\n            "
                     },
                     {
-                      "type": "textnode",
-                      "content": "\n            "
+                      "classes": [
+                        "lightbox"
+                      ],
+                      "attributes": {
+                        "id": "img5"
+                      },
+                      "components": [
+                        {
+                          "type": "link",
+                          "classes": [
+                            "close"
+                          ],
+                          "attributes": {
+                            "href": "javascript:void(0)"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "×"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/gallery/gallery5.jpg",
+                            "alt": "Performance 5"
+                          }
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
                     },
                     {
                       "type": "textnode",
                       "content": "\n            "
                     },
                     {
-                      "type": "textnode",
-                      "content": "\n            "
+                      "classes": [
+                        "lightbox"
+                      ],
+                      "attributes": {
+                        "id": "img6"
+                      },
+                      "components": [
+                        {
+                          "type": "link",
+                          "classes": [
+                            "close"
+                          ],
+                          "attributes": {
+                            "href": "javascript:void(0)"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "×"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/gallery/gallery6.jpg",
+                            "alt": "Performance 6"
+                          }
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
                     },
                     {
                       "type": "textnode",
                       "content": "\n            "
                     },
                     {
-                      "type": "textnode",
-                      "content": "\n            "
+                      "classes": [
+                        "lightbox"
+                      ],
+                      "attributes": {
+                        "id": "img7"
+                      },
+                      "components": [
+                        {
+                          "type": "link",
+                          "classes": [
+                            "close"
+                          ],
+                          "attributes": {
+                            "href": "javascript:void(0)"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "×"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/gallery/gallery7.jpg",
+                            "alt": "Performance 7"
+                          }
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
                     },
                     {
                       "type": "textnode",
                       "content": "\n            "
+                    },
+                    {
+                      "classes": [
+                        "lightbox"
+                      ],
+                      "attributes": {
+                        "id": "img8"
+                      },
+                      "components": [
+                        {
+                          "type": "link",
+                          "classes": [
+                            "close"
+                          ],
+                          "attributes": {
+                            "href": "javascript:void(0)"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "×"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/gallery/gallery8.jpg",
+                            "alt": "Performance 8"
+                          }
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
+                    },
+                    {
+                      "type": "textnode",
+                      "content": "\n            "
+                    },
+                    {
+                      "classes": [
+                        "lightbox"
+                      ],
+                      "attributes": {
+                        "id": "img9"
+                      },
+                      "components": [
+                        {
+                          "type": "link",
+                          "classes": [
+                            "close"
+                          ],
+                          "attributes": {
+                            "href": "javascript:void(0)"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "×"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/leah1.jpg",
+                            "alt": "Performance 9"
+                          }
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
+                    },
+                    {
+                      "type": "textnode",
+                      "content": "\n            "
+                    },
+                    {
+                      "classes": [
+                        "lightbox"
+                      ],
+                      "attributes": {
+                        "id": "img10"
+                      },
+                      "components": [
+                        {
+                          "type": "link",
+                          "classes": [
+                            "close"
+                          ],
+                          "attributes": {
+                            "href": "javascript:void(0)"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "×"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/gallery/gallery9.jpg",
+                            "alt": "Performance 10"
+                          }
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
+                    },
+                    {
+                      "type": "textnode",
+                      "content": "\n            "
+                    },
+                    {
+                      "classes": [
+                        "lightbox"
+                      ],
+                      "attributes": {
+                        "id": "img11"
+                      },
+                      "components": [
+                        {
+                          "type": "link",
+                          "classes": [
+                            "close"
+                          ],
+                          "attributes": {
+                            "href": "javascript:void(0)"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "×"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/gallery/gallery11.jpg",
+                            "alt": "Performance 11"
+                          }
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
+                    },
+                    {
+                      "type": "textnode",
+                      "content": "\n            "
+                    },
+                    {
+                      "classes": [
+                        "lightbox"
+                      ],
+                      "attributes": {
+                        "id": "img12"
+                      },
+                      "components": [
+                        {
+                          "type": "link",
+                          "classes": [
+                            "close"
+                          ],
+                          "attributes": {
+                            "href": "javascript:void(0)"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "×"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/gallery/gallery12.jpg",
+                            "alt": "Performance 12"
+                          }
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
+                    },
+                    {
+                      "type": "textnode",
+                      "content": "\n            "
+                    },
+                    {
+                      "classes": [
+                        "lightbox"
+                      ],
+                      "attributes": {
+                        "id": "img13"
+                      },
+                      "components": [
+                        {
+                          "type": "link",
+                          "classes": [
+                            "close"
+                          ],
+                          "attributes": {
+                            "href": "javascript:void(0)"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "×"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/gallery/gallery13.jpg",
+                            "alt": "Performance 13"
+                          }
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
+                    },
+                    {
+                      "type": "textnode",
+                      "content": "\n            "
+                    },
+                    {
+                      "classes": [
+                        "lightbox"
+                      ],
+                      "attributes": {
+                        "id": "img14"
+                      },
+                      "components": [
+                        {
+                          "type": "link",
+                          "classes": [
+                            "close"
+                          ],
+                          "attributes": {
+                            "href": "javascript:void(0)"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "×"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/gallery/gallery14.jpg",
+                            "alt": "Performance 14"
+                          }
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
+                    },
+                    {
+                      "type": "textnode",
+                      "content": "\n            "
+                    },
+                    {
+                      "classes": [
+                        "lightbox"
+                      ],
+                      "attributes": {
+                        "id": "img15"
+                      },
+                      "components": [
+                        {
+                          "type": "link",
+                          "classes": [
+                            "close"
+                          ],
+                          "attributes": {
+                            "href": "javascript:void(0)"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "×"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "image",
+                          "resizable": {
+                            "ratioDefault": 1
+                          },
+                          "attributes": {
+                            "src": "static/images/gallery/gallery15.jpg",
+                            "alt": "Performance 15"
+                          }
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
                     },
                     {
                       "type": "textnode",
@@ -9947,7 +10421,6 @@
                 },
                 {
                   "tagName": "section",
-                  "resizable": true,
                   "classes": [
                     "gallery-section"
                   ],
