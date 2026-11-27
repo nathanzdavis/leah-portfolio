@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
+import grapesjs from 'grapesjs';
 import { migrateGalleries } from '../lib/editor-gallery.js';
+import { setupGalleryHover } from '../lib/editor-interactions.js';
 
 function collect(node, predicate) {
   return [
@@ -35,5 +37,31 @@ test('the existing photo groups migrate once and preserve photo order, captions 
     }
     assert.deepEqual(collect(root(migrated), node => node?.tagName === 'iframe'),
       collect(root(site), node => node?.tagName === 'iframe'));
+  }
+});
+
+test('hover stays on the gallery while its photos remain individually selectable', () => {
+  const editor = grapesjs.init({ headless: true, storageManager: false });
+  try {
+    const [gallery, outside] = editor.addComponents([
+      { tagName: 'div', attributes: { 'data-editor-gallery': 'true' }, components: [
+        { type: 'link', components: [{ type: 'image', src: '/photo.jpg' }] },
+      ] },
+      { type: 'image', src: '/other.jpg' },
+    ]);
+    const link = gallery.components().at(0);
+    const photo = link.components().at(0);
+    const model = editor.getModel();
+    setupGalleryHover(editor);
+    model.setHovered(photo, { useValid: true });
+    assert.equal(model.getHovered(), gallery);
+    model.setHovered(link, { useValid: true });
+    assert.equal(model.getHovered(), gallery);
+    editor.select(photo);
+    assert.equal(editor.getSelected(), photo);
+    model.setHovered(outside, { useValid: true });
+    assert.equal(model.getHovered(), outside);
+  } finally {
+    editor.destroy();
   }
 });

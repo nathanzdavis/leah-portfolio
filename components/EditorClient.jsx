@@ -7,7 +7,7 @@ import { GalleryDialog, ShadowDialog } from '@/components/EditorVisualDialogs';
 import { galleryPhoto, mediaSource, migrateGalleries, newGallery } from '@/lib/editor-gallery';
 import { createDraftHistory, draftHistoryData } from '@/lib/editor-history';
 import { detachBackgroundImage, getBackgroundStyle, replaceImageTarget, uploadEditorMedia } from '@/lib/editor-media';
-import { blockIcons, isImage, labelSelectionTools, setupDragModes } from '@/lib/editor-interactions';
+import { blockIcons, isImage, labelSelectionTools, setupDragModes, setupGalleryHover } from '@/lib/editor-interactions';
 import { readPosition, setPagePosition } from '@/lib/editor-position';
 
 const canvasStyles = ['/static/css/screen.min.css','/static/css/custom.min.css','/static/css/about.css','/static/css/repertoire.css','/static/css/gallery.css','/static/css/sheet-music.css','/static/css/editor-gallery.css','https://fonts.googleapis.com/css?family=Roboto+Slab|Aguafina+Script|Albert+Sans|Aboreto&display=swap'];
@@ -265,6 +265,7 @@ export default function EditorClient() {
       editor.on('canvas:frame:load', ({ window: frameWindow }) => addSaveShortcut(frameWindow));
       addSaveShortcut(editor.Canvas.getWindow());
       setupDragModes(editor, notify);
+      setupGalleryHover(editor);
       editor.Commands.add('core:undo', () => stepHistory(-1));
       editor.Commands.add('core:redo', () => stepHistory(1));
       editor.onReady(() => {
