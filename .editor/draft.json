@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 3,
-  "updatedAt": "2026-11-27T22:01:03.688Z",
+  "updatedAt": "2026-11-27T22:02:26.546Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -314,6 +314,30 @@
           "font-family": "Arial, Helvetica, sans-serif",
           "width": "1333px"
         }
+      },
+      {
+        "selectors": [
+          "#ipulc-2"
+        ],
+        "style": {
+          "left": "0px",
+          "top": "386px",
+          "position": "absolute",
+          "width": "1340px",
+          "height": "109px"
+        }
+      },
+      {
+        "selectors": [
+          "#i2fqh-2"
+        ],
+        "style": {
+          "left": "158px",
+          "top": "495px",
+          "position": "absolute",
+          "width": "1024px",
+          "height": "28.796875px"
+        }
       }
     ],
     "pages": [
@@ -457,6 +481,8 @@
                                 },
                                 {
                                   "type": "link",
+                                  "droppable": true,
+                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link"
                                   ],
@@ -592,6 +618,82 @@
                           ],
                           "attributes": {
                             "id": "i2fqh"
+                          },
+                          "components": [
+                            {
+                              "type": "textnode",
+                              "content": "Cellist | Percussionist | Composer"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n            "
+                        }
+                      ]
+                    },
+                    {
+                      "type": "textnode",
+                      "content": "\n        "
+                    }
+                  ]
+                },
+                {
+                  "tagName": "section",
+                  "resizable": true,
+                  "classes": [
+                    "promo"
+                  ],
+                  "attributes": {
+                    "id": "ita4dad"
+                  },
+                  "components": [
+                    {
+                      "type": "textnode",
+                      "content": "\n            "
+                    },
+                    {
+                      "tagName": "h1",
+                      "type": "text",
+                      "droppable": true,
+                      "resizable": true,
+                      "classes": [
+                        "promo__title"
+                      ],
+                      "attributes": {
+                        "id": "ipulc-2"
+                      },
+                      "components": [
+                        {
+                          "type": "textnode",
+                          "content": "Leah Mosier"
+                        }
+                      ]
+                    },
+                    {
+                      "resizable": true,
+                      "classes": [
+                        "promo__inner"
+                      ],
+                      "components": [
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "tagName": "h2",
+                          "type": "text",
+                          "droppable": true,
+                          "resizable": true,
+                          "classes": [
+                            "promo__slogan"
+                          ],
+                          "attributes": {
+                            "id": "i2fqh-2"
                           },
                           "components": [
                             {
