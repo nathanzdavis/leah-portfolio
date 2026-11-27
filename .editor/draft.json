@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 3,
-  "updatedAt": "2026-11-27T22:26:35.971Z",
+  "updatedAt": "2026-11-27T22:26:38.208Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -220,7 +220,8 @@
           "font-weight": "bold",
           "font-size": "26px",
           "color": "#3a3a3a",
-          "font-family": "'Aguafina Script', cursive"
+          "font-family": "'Aguafina Script', cursive",
+          "transform": " translateX(101px) translateY(1px)"
         }
       },
       {
