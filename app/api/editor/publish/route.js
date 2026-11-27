@@ -3,17 +3,9 @@ import { assertSameOrigin, isAuthenticated } from '@/lib/auth';
 import { githubConfigured, publishToGithub } from '@/lib/github';
 import { saveDraft } from '@/lib/draft-store';
 import { validateSiteDocument } from '@/lib/site-schema';
+import { publishedMedia } from '@/lib/editor-media';
 
 let publishing = false;
-function publishedMedia(value) {
-  if (Array.isArray(value)) return value.map(publishedMedia);
-  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key,item])=>[key,publishedMedia(item)]));
-  if (typeof value === 'string' && value.startsWith('/api/editor/media?path=')) {
-    const repoPath = decodeURIComponent(value.slice(value.indexOf('=') + 1));
-    return repoPath.startsWith('public/') ? `/${repoPath.slice(7)}` : value;
-  }
-  return value;
-}
 export async function POST(request) {
   if (!await isAuthenticated()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   if (publishing) return NextResponse.json({ error: 'A publish is already in progress.' }, { status: 409 });

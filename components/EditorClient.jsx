@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { replaceImage, uploadEditorMedia } from '@/lib/editor-media';
+import { replaceImageTarget, uploadEditorMedia } from '@/lib/editor-media';
 import { blockIcons, isImage, labelSelectionTools, setupDragModes } from '@/lib/editor-interactions';
 
 const canvasStyles = ['/static/css/screen.min.css','/static/css/custom.min.css','/static/css/about.css','/static/css/repertoire.css','/static/css/gallery.css','/static/css/sheet-music.css','https://fonts.googleapis.com/css?family=Roboto+Slab|Aguafina+Script|Albert+Sans|Aboreto&display=swap'];
@@ -19,24 +19,24 @@ export default function EditorClient() {
   async function saveNow(){const value=snapshot();if(!value)return;setStatus('Saving draft…');const res=await fetch('/api/editor/draft',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(value)});const data=await res.json();if(!res.ok){setStatus('Draft not saved');notify(data.error||'Save failed',true);return false}draftRef.current=value;setDoc(value);setStatus(`Draft saved ${new Date(data.savedAt).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}`);editorRef.current?.clearDirtyCount();return true}
   function scheduleSave(){clearTimeout(saveTimer.current);setStatus('Unsaved changes');saveTimer.current=setTimeout(saveNow,1400)}
 
-  function chooseImage(model) {
-    imageTargetRef.current = model;
+  function chooseImage(target) {
+    imageTargetRef.current = target;
     imageInputRef.current?.click();
   }
 
   async function changeImage(event) {
     const file = event.target.files?.[0];
     event.target.value = '';
-    const model = imageTargetRef.current;
-    if (!file || !model) return;
+    const target = imageTargetRef.current;
+    if (!file || !target) return;
     const editor = editorRef.current;
     notify('Uploading image…');
     try {
       const asset = await uploadEditorMedia(file);
-      if (editor !== editorRef.current || !model.parent()) return;
+      if (editor !== editorRef.current || !target.model.parent()) return;
       if (asset.type !== 'image') throw new Error('Choose an image file.');
       editor.AssetManager.add(asset);
-      replaceImage(model, asset.src);
+      replaceImageTarget(target, asset.src);
       scheduleSave();
       notify('Image replaced');
     } catch (error) {

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import grapesjs from 'grapesjs';
 import { setupDragModes } from '../lib/editor-interactions.js';
-import { replaceImage } from '../lib/editor-media.js';
+import { getImageTarget, publishedMedia, replaceImage, replaceImageTarget } from '../lib/editor-media.js';
 
 test('toolbar Shift enables unsnapped movement and normal drag stays in layout mode', () => {
   const editor = grapesjs.init({ headless: true, storageManager: false });
@@ -49,6 +49,34 @@ test('image replacement updates the GrapesJS source without touching its parent 
     assert.equal(image.getAttributes().src, '/replacement.webp');
     assert.equal(image.getAttributes().alt, 'Cello');
     assert.equal(image.getAttributes().srcset, undefined);
+  } finally {
+    editor.destroy();
+  }
+});
+
+test('a hero background can be replaced and published without changing its other styles', () => {
+  const editor = grapesjs.init({ headless: true, storageManager: false });
+  try {
+    const [hero] = editor.addComponents({
+      tagName: 'section',
+      style: { 'background-size': 'cover' },
+      components: [{ tagName: 'h1' }],
+    });
+    const element = { ownerDocument: { defaultView: {
+      getComputedStyle: () => ({ backgroundImage: 'linear-gradient(black, transparent), url("old.jpg")' }),
+    } } };
+    hero.getEl = () => element;
+    const [heading] = hero.components().models;
+    const target = getImageTarget(hero);
+    const src = '/api/editor/media?path=public%2Fstatic%2Fuploads%2Fnew.webp';
+    replaceImageTarget(target, src);
+    assert.equal(hero.components().at(0), heading);
+    assert.equal(hero.getStyle()['background-size'], 'cover');
+    assert.equal(hero.getStyle()['background-image'], `linear-gradient(black, transparent), url("${src}")`);
+    const published = JSON.stringify(publishedMedia(editor.getProjectData()));
+    assert.match(published, /static\/uploads\/new\.webp/);
+    assert.doesNotMatch(published, /api\/editor\/media/);
+    assert.equal(publishedMedia(src), '/static/uploads/new.webp');
   } finally {
     editor.destroy();
   }
