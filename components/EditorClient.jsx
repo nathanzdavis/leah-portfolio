@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import BackgroundColorPicker from '@/components/BackgroundColorPicker';
 import { createDraftHistory, draftHistoryData } from '@/lib/editor-history';
@@ -12,6 +13,8 @@ const canvasStyles = ['/static/css/screen.min.css','/static/css/custom.min.css',
 export default function EditorClient() {
   const editorRef = useRef(null); const draftRef = useRef(null); const saveTimer = useRef(null);
   const mainRef = useRef(null);
+  const readyRef = useRef(false);
+  const [startupError, setStartupError] = useState('');
   const imageInputRef = useRef(null);
   const imageTargetRef = useRef(null);
   const undoRef = useRef(null);
@@ -27,6 +30,7 @@ export default function EditorClient() {
   function notify(message,error=false){setToast({message,error});setTimeout(()=>setToast(null),3500)}
   function snapshot(editor=editorRef.current){ if(!editor||!draftRef.current)return null; return {...draftRef.current,updatedAt:new Date().toISOString(),projectData:editor.getProjectData()}; }
   function saveNow() {
+    if (!readyRef.current) return Promise.resolve(false);
     clearTimeout(saveTimer.current);
     const save = async () => {
       const value = snapshot();
@@ -53,7 +57,7 @@ export default function EditorClient() {
   }
 
   function scheduleSave() {
-    if (restoringRef.current) return;
+    if (restoringRef.current || !readyRef.current) return;
     const value = snapshot();
     if (value) undoRef.current?.record(draftHistoryData(value), editorRef.current.Pages.getSelected()?.id);
     clearTimeout(saveTimer.current);
@@ -170,7 +174,39 @@ export default function EditorClient() {
     }
   }
 
-  useEffect(()=>{let disposed=false;const shortcut=new AbortController();const addSaveShortcut=target=>target?.addEventListener('keydown',handleSave,{capture:true,signal:shortcut.signal});addSaveShortcut(window); (async()=>{const res=await fetch('/api/editor/draft');if(res.status===401){router.replace('/editor/login');return}const loaded=await res.json();if(disposed)return;const originalData=draftHistoryData(loaded);const timeline=createDraftHistory(window.sessionStorage,loaded.updatedAt,originalData,loaded.pages[0].id);undoRef.current=timeline;const restored=timeline.current();const recovered=restored.data!==originalData;const current={...loaded,...JSON.parse(restored.data)};draftRef.current=current;setDoc(current);const grapesjs=(await import('grapesjs')).default;const editor=grapesjs.init({container:'#gjs',height:'100%',fromElement:false,projectData:current.projectData,storageManager:false,panels:{defaults:[]},canvas:{styles:canvasStyles},blockManager:{appendTo:'#blocks'},layerManager:{appendTo:'#layers'},styleManager:{appendTo:'#styles',sectors:[{name:'Layout',open:true,buildProps:['display','position','width','height','min-height','max-width','margin','padding','overflow','z-index','flex-direction','flex-wrap','justify-content','align-items','gap','grid-template-columns']},{name:'Typography',open:true,buildProps:['font-family','font-size','font-weight','line-height','letter-spacing','color','text-align','text-decoration']},{name:'Appearance',open:true,buildProps:['background-color','background','border','border-radius','box-shadow','opacity']},{name:'Effects',buildProps:['transform','transition']}]},traitManager:{appendTo:'#traits'},selectorManager:{appendTo:'#selectors'},deviceManager:{devices:[{id:'Desktop',name:'Desktop',width:''},{id:'Tablet',name:'Tablet',width:'768px',widthMedia:'992px'},{id:'Mobile',name:'Mobile',width:'390px',widthMedia:'600px'}]},assetManager:{assets:current.projectData.assets||[],upload:'/api/editor/media',uploadName:'files',uploadFile:uploadAssets}});
+  useEffect(() => {
+    let disposed = false;
+    const shortcut = new AbortController();
+    const addSaveShortcut = target => target?.addEventListener('keydown', handleSave, { capture: true, signal: shortcut.signal });
+    addSaveShortcut(window);
+
+    async function initializeEditor() {
+      const response = await fetch('/api/editor/draft', { cache: 'no-store', signal: shortcut.signal });
+      if (response.status === 401) {
+        router.replace('/editor/login');
+        return;
+      }
+      if (!response.ok) throw new Error(`Could not load draft (HTTP ${response.status})`);
+      const loaded = await response.json();
+      const grapesjs = (await import('grapesjs')).default;
+      if (disposed) return;
+
+      let storage;
+      try { storage = window.sessionStorage; } catch {}
+      const originalData = draftHistoryData(loaded);
+      const timeline = createDraftHistory(storage, loaded.updatedAt, originalData, loaded.pages[0].id);
+      undoRef.current = timeline;
+      const restored = timeline.current();
+      const recovered = restored.data !== originalData;
+      const current = { ...loaded, ...JSON.parse(restored.data) };
+      draftRef.current = current;
+
+      // GrapesJS resolves its canvas and sidebar targets synchronously.
+      // Commit the shell before handing React-owned mount points to GrapesJS.
+      flushSync(() => setDoc(current));
+      const container = document.getElementById('gjs');
+      if (!container) throw new Error('Editor canvas mount is missing');
+      const editor = grapesjs.init({container,height:'100%',fromElement:false,projectData:current.projectData,storageManager:false,panels:{defaults:[]},canvas:{styles:canvasStyles},blockManager:{appendTo:'#blocks'},layerManager:{appendTo:'#layers'},styleManager:{appendTo:'#styles',sectors:[{name:'Layout',open:true,buildProps:['display','position','width','height','min-height','max-width','margin','padding','overflow','z-index','flex-direction','flex-wrap','justify-content','align-items','gap','grid-template-columns']},{name:'Typography',open:true,buildProps:['font-family','font-size','font-weight','line-height','letter-spacing','color','text-align','text-decoration']},{name:'Appearance',open:true,buildProps:['background-color','background','border','border-radius','box-shadow','opacity']},{name:'Effects',buildProps:['transform','transition']}]},traitManager:{appendTo:'#traits'},selectorManager:{appendTo:'#selectors'},deviceManager:{devices:[{id:'Desktop',name:'Desktop',width:''},{id:'Tablet',name:'Tablet',width:'768px',widthMedia:'992px'},{id:'Mobile',name:'Mobile',width:'390px',widthMedia:'600px'}]},assetManager:{assets:current.projectData.assets||[],upload:'/api/editor/media',uploadName:'files',uploadFile:uploadAssets}});
       editorRef.current=editor;
       editor.on('canvas:frame:load', ({ window: frameWindow }) => addSaveShortcut(frameWindow));
       addSaveShortcut(editor.Canvas.getWindow());
@@ -182,6 +218,7 @@ export default function EditorClient() {
         const page = editor.Pages.get(restored.pageId);
         if (page) editor.Pages.select(page);
         timeline.normalize(draftHistoryData(snapshot()));
+        readyRef.current = true;
         if (recovered) scheduleSave();
       });
       const blocks=[['text','Text','<p>Double-click to edit this text</p>'],['heading','Heading','<h2>New heading</h2>'],['button','Button','<a class="editor-button" href="#">Button</a>'],['image','Image',{type:'image'}],['section','Section','<section style="padding:60px 24px"><div style="max-width:1100px;margin:auto"><h2>New section</h2><p>Add content here.</p></div></section>'],['columns','Columns','<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px"><div>Column one</div><div>Column two</div></div>'],['card','Card','<article style="padding:24px;border:1px solid #ddd;border-radius:12px"><h3>Card title</h3><p>Card content</p></article>'],['divider','Divider','<hr>'],['spacer','Spacer','<div style="height:48px"></div>'],['video','Video',{type:'video'}]];
@@ -213,7 +250,25 @@ export default function EditorClient() {
       editor.on('update',scheduleSave);editor.on('component:selected',(model)=>{if(model.get('tagName')!=='body')model.set({resizable:isImage(model)?{ratioDefault:true}:true,draggable:true,droppable:!isImage(model)},{silent:true});syncSelection();clampToolbar();});
       editor.on('component:deselected',syncSelection);editor.on('component:toggled',()=>{syncSelection();clampToolbar()});editor.on('canvas:tools:update',clampToolbar);editor.on('canvas:refresh',clampToolbar);
       setStatus('Draft loaded');
-    })();return()=>{disposed=true;shortcut.abort();clearTimeout(saveTimer.current);editorRef.current?.destroy();editorRef.current=null}},[]);
+    }
+
+    initializeEditor().catch(error => {
+      if (disposed) return;
+      console.error('Editor startup failed:', error);
+      readyRef.current = false;
+      clearTimeout(saveTimer.current);
+      setStartupError('The editor could not open your draft.');
+    });
+
+    return () => {
+      disposed = true;
+      readyRef.current = false;
+      shortcut.abort();
+      clearTimeout(saveTimer.current);
+      editorRef.current?.destroy();
+      editorRef.current = null;
+    };
+  }, []);
 
   function command(id){const e=editorRef.current;if(!e)return;if(id==='undo'||id==='redo')e.runCommand(`core:${id}`);else if(id==='preview')e.runCommand('preview');else if(id==='fullscreen')e.runCommand('fullscreen');}
   function switchDevice(name){setDevice(name);editorRef.current?.setDevice(name);requestAnimationFrame(()=>editorRef.current?.refresh({tools:true}))}
@@ -230,6 +285,10 @@ export default function EditorClient() {
   async function openHistory(){const res=await fetch('/api/editor/history');setHistory(await res.json())}
   async function restore(sha){if(!confirm('Restore this version into your draft? Nothing goes live until you publish.'))return;clearTimeout(saveTimer.current);await saveQueue.current;const res=await fetch('/api/editor/restore',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sha})});const data=await res.json();if(!res.ok)return notify(data.error,true);undoRef.current?.clear();location.reload()}
   async function logout(){await fetch('/api/auth/logout',{method:'POST'});router.replace('/editor/login');router.refresh()}
+  if (startupError) return <main className="login-shell"><section className="login-card" role="alert">
+    <h1>Editor couldn’t load</h1><p>{startupError} Try opening it again.</p>
+    <button type="button" onClick={()=>window.location.reload()}>Retry</button>
+  </section></main>;
   if(!doc)return <main className="login-shell">Loading editor…</main>;
   const selected=editorRef.current?.Pages.getSelected()?.id||doc.pages[0]?.id;
   return <div className="editor-app"><header className="editor-topbar"><div className="brand"><span className="brand-mark">LM</span><span className="brand-copy"><strong>Leah’s Studio</strong><small>Visual website editor</small></span></div><div className="topbar-group"><button className="tool-button" onClick={()=>command('undo')} title="Undo (Ctrl+Z)" aria-label="Undo">↶</button><button className="tool-button" onClick={()=>command('redo')} title="Redo" aria-label="Redo">↷</button></div>{selection.count>1&&<button className="tool-button selection-button" onClick={groupSelection} disabled={!selection.canGroup} title={selection.canGroup?'Group selected elements':'Selected elements must be in the same section'}>Group {selection.count}</button>}{selection.isGroup&&<button className="tool-button selection-button" title="Ungroup selected elements" onClick={ungroupSelection}>Ungroup</button>}<div className="topbar-group">{['Desktop','Tablet','Mobile'].map(d=><button key={d} className={`device-button ${device===d?'active':''}`} title={`Preview at ${d.toLowerCase()} width`} onClick={()=>switchDevice(d)}>{d}</button>)}</div><div className="topbar-spacer"/><button className="tool-button inspector-toggle" title="Toggle design controls" onClick={()=>setInspectorOpen(v=>!v)}>Design</button><button className="tool-button" title="View published versions" onClick={openHistory}>History</button><button className="tool-button" title="Editor account settings" onClick={()=>setPasswordOpen(true)}>Account</button><button className="tool-button" title="Preview the site" onClick={()=>command('preview')}>Preview</button><button className="tool-button" title="Save the draft" onClick={saveNow}>Save</button><button className="tool-button publish-button" title="Publish the draft to the live website" onClick={publish}>Publish</button><button className="tool-button" title="Sign out of the editor" onClick={logout}>Log out</button></header>
