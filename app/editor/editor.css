@@ -69,6 +69,23 @@
 .position-actions { display:flex; flex-wrap:wrap; gap:4px }
 .position-actions button { background:#333; color:inherit; border:1px solid #555; padding:4px 8px; cursor:pointer }
 .position-actions button:disabled { opacity:.55; cursor:default }
+.gallery-dialog { width:min(650px,94vw) }
+.gallery-modal-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-bottom:12px }
+.gallery-modal-options label { display:grid; gap:4px; min-width:0; font-weight:600 }
+.gallery-modal-options input,.gallery-modal-options select,.gallery-modal-photo input {
+  width:100%; min-width:0; padding:5px; border:1px solid var(--line); border-radius:5px; font:inherit; accent-color:var(--accent);
+}
+.gallery-modal-order { display:grid; gap:4px; max-height:190px; overflow:auto }
+.gallery-modal-photo { display:grid; grid-template-columns:36px minmax(0,1fr) repeat(3,30px); gap:5px; align-items:center }
+.gallery-modal-photo img { width:36px; height:36px; object-fit:cover; border-radius:3px }
+.gallery-modal-photo button:disabled { opacity:.45; cursor:default }
+.gallery-modal-library { display:grid; grid-template-columns:repeat(auto-fill,minmax(70px,1fr)); gap:7px; max-height:205px; overflow:auto; margin:10px 0 }
+.gallery-modal-library button { position:relative; padding:1px; border:1px solid var(--line); border-radius:4px; cursor:pointer; overflow:hidden }
+.gallery-modal-library button:disabled { cursor:default; opacity:.65 }
+.gallery-modal-library img { display:block; width:100%; aspect-ratio:1; object-fit:cover }
+.gallery-modal-library span { position:absolute; left:0; right:0; bottom:0; padding:3px; color:#fff; background:#000b }
+.shadow-preview { display:grid; place-items:center; min-height:100px; background:#eeebe7; border-radius:6px; margin-bottom:12px }
+.shadow-preview span { padding:13px 20px; background:#fff; border-radius:6px }
 .password-modal label{display:grid;gap:7px;margin:14px 0;font-weight:700}.password-modal input{padding:11px 12px;border:1px solid var(--line);border-radius:8px;font:inherit}.password-submit{width:100%;margin-top:8px;padding:12px}
 @media(max-width:1250px){.editor-main{grid-template-columns:clamp(140px,var(--editor-sidebar-left,205px),38vw) minmax(0,1fr)}.sidebar.right{position:fixed;right:0;top:58px;bottom:28px;width:min(var(--editor-sidebar-right,292px),95vw);z-index:60;box-shadow:-12px 0 30px #0002;transform:translateX(105%);transition:transform .2s}.sidebar.right.open{transform:translateX(0)}.inspector-toggle{display:block}.brand{min-width:auto}.brand-copy{display:none}}
 @media(max-width:480px) {

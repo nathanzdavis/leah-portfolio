@@ -3,12 +3,14 @@ import { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import BackgroundColorPicker from '@/components/BackgroundColorPicker';
+import { GalleryDialog, ShadowDialog } from '@/components/EditorVisualDialogs';
+import { galleryPhoto, mediaSource, migrateGalleries, newGallery } from '@/lib/editor-gallery';
 import { createDraftHistory, draftHistoryData } from '@/lib/editor-history';
 import { detachBackgroundImage, getBackgroundStyle, replaceImageTarget, uploadEditorMedia } from '@/lib/editor-media';
 import { blockIcons, isImage, labelSelectionTools, setupDragModes } from '@/lib/editor-interactions';
 import { readPosition, setPagePosition } from '@/lib/editor-position';
 
-const canvasStyles = ['/static/css/screen.min.css','/static/css/custom.min.css','/static/css/about.css','/static/css/repertoire.css','/static/css/gallery.css','/static/css/sheet-music.css','https://fonts.googleapis.com/css?family=Roboto+Slab|Aguafina+Script|Albert+Sans|Aboreto&display=swap'];
+const canvasStyles = ['/static/css/screen.min.css','/static/css/custom.min.css','/static/css/about.css','/static/css/repertoire.css','/static/css/gallery.css','/static/css/sheet-music.css','/static/css/editor-gallery.css','https://fonts.googleapis.com/css?family=Roboto+Slab|Aguafina+Script|Albert+Sans|Aboreto&display=swap'];
 
 export default function EditorClient() {
   const editorRef = useRef(null); const draftRef = useRef(null); const saveTimer = useRef(null);
@@ -23,6 +25,8 @@ export default function EditorClient() {
   const [copiedPosition, setCopiedPosition] = useState(null);
   const [position, setPosition] = useState(null);
   const [colorTarget, setColorTarget] = useState(null);
+  const [galleryTarget, setGalleryTarget] = useState(null);
+  const [shadowTarget, setShadowTarget] = useState(null);
   const [doc,setDoc]=useState(null); const [leftTab,setLeftTab]=useState('blocks'); const [rightTab,setRightTab]=useState('styles'); const [device,setDevice]=useState('Desktop'); const [inspectorOpen,setInspectorOpen]=useState(false);
   const [selection,setSelection]=useState({count:0,canGroup:false,isGroup:false});
   const [status,setStatus]=useState('Loading draft…'); const [toast,setToast]=useState(null); const [history,setHistory]=useState(null); const [passwordOpen,setPasswordOpen]=useState(false); const router=useRouter();
@@ -76,7 +80,7 @@ export default function EditorClient() {
     if (!entry) return notify(direction < 0 ? 'No earlier edit in this tab.' : 'No edit to redo.');
     restoringRef.current = true;
     try {
-      const restored = JSON.parse(entry.data);
+      const restored = migrateGalleries({ ...draftRef.current, ...JSON.parse(entry.data) });
       draftRef.current = { ...draftRef.current, ...restored };
       const manager = editor.UndoManager;
       if (direction < 0 ? manager.hasUndo() : manager.hasRedo()) {
@@ -117,6 +121,55 @@ export default function EditorClient() {
   function chooseImage(target) {
     imageTargetRef.current = target;
     imageInputRef.current?.click();
+  }
+
+  function galleryAssets() {
+    const assets = editorRef.current?.AssetManager.getAll().models || [];
+    return Array.from(new Map(assets.filter(asset => asset.get('type') === 'image' && asset.getSrc()).map(asset => {
+      const src = mediaSource(asset.getSrc());
+      return [src, { src, name: asset.get('name') || src.split('/').pop() }];
+    })).values());
+  }
+
+  async function uploadGalleryPhoto(file) {
+    const editor = editorRef.current;
+    if (file.type.startsWith('video/')) throw new Error('Choose an image');
+    const asset = await uploadEditorMedia(file);
+    if (editor !== editorRef.current || asset.type !== 'image') throw new Error('Choose an image');
+    editor.AssetManager.add(asset);
+    return { src: asset.src, name: asset.name || file.name };
+  }
+
+  function applyGallery({ items, layout, shape }) {
+    const gallery = galleryTarget;
+    if (!gallery?.parent()) return setGalleryTarget(null);
+    const existing = new Set(items.map(item => item.link));
+    const removed = gallery.components().models.filter(child =>
+      child.getAttributes()['data-gallery-photo'] && !existing.has(child));
+    removed.forEach(child => child.remove());
+    items.forEach((item, index) => {
+      if (item.link) {
+        item.image.addAttributes({ alt: item.alt });
+        if (item.link.index() !== index) item.link.move(gallery, { at: index });
+      } else gallery.append(galleryPhoto(item.src, item.alt), { at: index });
+    });
+    gallery.addAttributes({ 'data-gallery-layout': layout, 'data-gallery-shape': shape });
+    editorRef.current?.select(gallery);
+    setGalleryTarget(null);
+    scheduleSave();
+  }
+
+  function applyShadow(value) {
+    const model = shadowTarget;
+    if (model?.parent()) {
+      model.addStyle({ 'box-shadow': value });
+      const parent = model.parent();
+      if (isImage(model) && parent.getAttributes()['data-gallery-photo']) {
+        parent.addStyle({ '--gallery-photo-shadow': value === 'none' ? 'none' : `drop-shadow(${value})` });
+      }
+      scheduleSave();
+    }
+    setShadowTarget(null);
   }
 
   function detachImage(model) {
@@ -198,7 +251,7 @@ export default function EditorClient() {
       undoRef.current = timeline;
       const restored = timeline.current();
       const recovered = restored.data !== originalData;
-      const current = { ...loaded, ...JSON.parse(restored.data) };
+      const current = migrateGalleries({ ...loaded, ...JSON.parse(restored.data) });
       draftRef.current = current;
 
       // GrapesJS resolves its canvas and sidebar targets synchronously.
@@ -221,11 +274,11 @@ export default function EditorClient() {
         readyRef.current = true;
         if (recovered) scheduleSave();
       });
-      const blocks=[['text','Text','<p>Double-click to edit this text</p>'],['heading','Heading','<h2>New heading</h2>'],['button','Button','<a class="editor-button" href="#">Button</a>'],['image','Image',{type:'image'}],['section','Section','<section style="padding:60px 24px"><div style="max-width:1100px;margin:auto"><h2>New section</h2><p>Add content here.</p></div></section>'],['columns','Columns','<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px"><div>Column one</div><div>Column two</div></div>'],['card','Card','<article style="padding:24px;border:1px solid #ddd;border-radius:12px"><h3>Card title</h3><p>Card content</p></article>'],['divider','Divider','<hr>'],['spacer','Spacer','<div style="height:48px"></div>'],['video','Video',{type:'video'}]];
+      const blocks=[['text','Text','<p>Double-click to edit this text</p>'],['heading','Heading','<h2>New heading</h2>'],['button','Button','<a class="editor-button" href="#">Button</a>'],['image','Image',{type:'image'}],['section','Section','<section style="padding:60px 24px"><div style="max-width:1100px;margin:auto"><h2>New section</h2><p>Add content here.</p></div></section>'],['columns','Columns','<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px"><div>Column one</div><div>Column two</div></div>'],['card','Card','<article style="padding:24px;border:1px solid #ddd;border-radius:12px"><h3>Card title</h3><p>Card content</p></article>'],['divider','Divider','<hr>'],['spacer','Spacer','<div style="height:48px"></div>'],['video','Video',{type:'video'}],['gallery','Gallery',newGallery]];
       blocks.forEach(([id,label,content])=>editor.BlockManager.add(id,{
         label, content, media: `<span class="editor-block-icon" aria-hidden="true">${blockIcons[id]}</span>`,
         attributes: { title: `Drag to add ${label.toLowerCase()}` },
-        category:id==='section'||id==='columns'?'Layout':'Basic',
+        category:['section','columns','gallery'].includes(id)?'Layout':'Basic',
       }));
       const syncSelection=()=>{const selected=editor.getSelectedAll();const parent=selected[0]?.parent();setSelection({count:selected.length,canGroup:selected.length>1&&selected.every(item=>item.parent()===parent),isGroup:selected.length===1&&selected[0].getAttributes?.()['data-editor-group']==='true'});};
       const clampToolbar = () => requestAnimationFrame(() => {
@@ -237,7 +290,7 @@ export default function EditorClient() {
         const toolbar = editor.Canvas.getToolbarEl();
         const canvas = editor.Canvas.getElement();
         if (!toolbar || !canvas || toolbar.offsetParent === null) return;
-        labelSelectionTools(toolbar, editor.getSelected(), chooseImage, setColorTarget, detachImage);
+        labelSelectionTools(toolbar, editor.getSelected(), chooseImage, setColorTarget, detachImage, setGalleryTarget, setShadowTarget);
         const bar = toolbar.getBoundingClientRect();
         const bounds = canvas.getBoundingClientRect();
         const style = getComputedStyle(toolbar);
@@ -324,6 +377,9 @@ export default function EditorClient() {
         setColorTarget(null);
       }}
     />}
+    {galleryTarget && <GalleryDialog gallery={galleryTarget} assets={galleryAssets()} onApply={applyGallery}
+      onUpload={uploadGalleryPhoto} onClose={()=>setGalleryTarget(null)} />}
+    {shadowTarget && <ShadowDialog onApply={applyShadow} onClose={()=>setShadowTarget(null)} />}
     <footer className="editor-status"><span>{status}</span><span style={{marginLeft:'auto'}}>Revision {doc.revision} · autosave on</span></footer>{toast&&<div className={`toast ${toast.error?'error':''}`}>{toast.message}</div>}{history&&<div className="modal-backdrop" onClick={()=>setHistory(null)}><div className="modal" onClick={e=>e.stopPropagation()}><button className="mini-button" style={{float:'right'}} onClick={()=>setHistory(null)}>×</button><h2>Published versions</h2>{history.length===0&&<p>No published editor versions yet.</p>}{history.map(item=><div className="history-item" key={item.sha}><div><strong>{item.message}</strong><small style={{display:'block'}}>{new Date(item.date).toLocaleString()} · {item.author}</small></div><button className="mini-button" onClick={()=>restore(item.sha)}>Restore draft</button></div>)}</div></div>}{passwordOpen&&<PasswordModal close={()=>setPasswordOpen(false)} notify={notify}/>}</div>;
 }
 
