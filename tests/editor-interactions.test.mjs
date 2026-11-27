@@ -112,10 +112,21 @@ test('detaching a section background makes a separate movable image behind the e
       backgroundSize: 'cover',
       position: 'static',
     };
-    section.getEl = () => ({ ownerDocument: {
+    const ownerDocument = {
       baseURI: 'https://example.com/editor',
-      defaultView: { getComputedStyle: () => style },
-    } });
+      defaultView: {
+        scrollX: 0, scrollY: 0,
+        getComputedStyle: element => element === overlay ? {
+          position: 'absolute', left: '20px', top: '10px', right: 'auto', bottom: 'auto',
+        } : style,
+      },
+    };
+    const overlay = {
+      ownerDocument,
+      getBoundingClientRect: () => ({ left: section.getStyle().position === 'relative' ? 120 : 20, top: 10 }),
+    };
+    section.getEl = () => ({ ownerDocument });
+    heading.getEl = () => overlay;
     const image = detachBackgroundImage(section);
     assert.equal(image.get('tagName'), 'img');
     assert.equal(image.getAttributes().src, '/api/editor/media?path=public%2Fstatic%2Fuploads%2Fhero.webp');
@@ -123,7 +134,8 @@ test('detaching a section background makes a separate movable image behind the e
     assert.equal(image.getStyle().position, 'absolute');
     assert.equal(section.getStyle()['background-image'], 'none');
     assert.equal(section.getStyle()['background-color'], '#d18966');
-    assert.deepEqual(section.components().models, [image, heading]);
+    assert.equal(heading.getStyle().left, '-80px');
+    assert.deepEqual(section.components().models, [heading, image]);
     assert.match(JSON.stringify(publishedMedia(editor.getProjectData())), /static\/uploads\/hero\.webp/);
     assert.doesNotMatch(JSON.stringify(publishedMedia(editor.getProjectData())), /api\/editor\/media/);
   } finally {

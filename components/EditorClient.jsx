@@ -11,6 +11,7 @@ const canvasStyles = ['/static/css/screen.min.css','/static/css/custom.min.css',
 
 export default function EditorClient() {
   const editorRef = useRef(null); const draftRef = useRef(null); const saveTimer = useRef(null);
+  const mainRef = useRef(null);
   const imageInputRef = useRef(null);
   const imageTargetRef = useRef(null);
   const undoRef = useRef(null);
@@ -73,10 +74,26 @@ export default function EditorClient() {
     try {
       const restored = JSON.parse(entry.data);
       draftRef.current = { ...draftRef.current, ...restored };
-      editor.select();
-      editor.loadProjectData(restored.projectData);
-      editor.Pages.select(editor.Pages.get(entry.pageId) || editor.Pages.get(page) || editor.Pages.getMain());
-      setDoc(draftRef.current);
+      const manager = editor.UndoManager;
+      if (direction < 0 ? manager.hasUndo() : manager.hasRedo()) {
+        if (direction < 0) manager.undo();
+        else manager.redo();
+      }
+      if (draftHistoryData(snapshot()) !== entry.data) {
+        const current = editor.getProjectData();
+        const { styles, ...rest } = restored.projectData;
+        const { styles: currentStyles, ...currentRest } = current;
+        if (JSON.stringify(rest) === JSON.stringify(currentRest)) {
+          editor.setStyle(styles);
+        } else {
+          editor.select();
+          editor.loadProjectData(restored.projectData);
+          editor.Pages.select(editor.Pages.get(entry.pageId) || editor.Pages.get(page) || editor.Pages.getMain());
+        }
+        manager.clear();
+      }
+      if (JSON.stringify(value.pages) !== JSON.stringify(restored.pages)) setDoc(draftRef.current);
+      editor.refresh({ tools: true });
       timeline.normalize(draftHistoryData(snapshot()));
     } finally {
       restoringRef.current = false;
@@ -87,7 +104,7 @@ export default function EditorClient() {
   function applyPosition(coordinates) {
     const model = editorRef.current?.getSelected();
     if (setPagePosition(model, coordinates.x, coordinates.y)) {
-      setPosition(readPosition(model));
+      setPosition({ ...readPosition(model), id: model.cid });
       editorRef.current.refresh({ tools: true });
       scheduleSave();
     }
@@ -145,8 +162,18 @@ export default function EditorClient() {
     }
   }
 
-  useEffect(()=>{let disposed=false; (async()=>{const res=await fetch('/api/editor/draft');if(res.status===401){router.replace('/editor/login');return}const loaded=await res.json();if(disposed)return;const originalData=draftHistoryData(loaded);const timeline=createDraftHistory(window.sessionStorage,loaded.updatedAt,originalData,loaded.pages[0].id);undoRef.current=timeline;const restored=timeline.current();const recovered=restored.data!==originalData;const current={...loaded,...JSON.parse(restored.data)};draftRef.current=current;setDoc(current);const grapesjs=(await import('grapesjs')).default;const editor=grapesjs.init({container:'#gjs',height:'100%',fromElement:false,projectData:current.projectData,storageManager:false,panels:{defaults:[]},canvas:{styles:canvasStyles},blockManager:{appendTo:'#blocks'},layerManager:{appendTo:'#layers'},styleManager:{appendTo:'#styles',sectors:[{name:'Layout',open:true,buildProps:['display','position','width','height','min-height','max-width','margin','padding','overflow','z-index','flex-direction','flex-wrap','justify-content','align-items','gap','grid-template-columns']},{name:'Typography',open:true,buildProps:['font-family','font-size','font-weight','line-height','letter-spacing','color','text-align','text-decoration']},{name:'Appearance',open:true,buildProps:['background-color','background','border','border-radius','box-shadow','opacity']},{name:'Effects',buildProps:['transform','transition']}]},traitManager:{appendTo:'#traits'},selectorManager:{appendTo:'#selectors'},deviceManager:{devices:[{id:'Desktop',name:'Desktop',width:''},{id:'Tablet',name:'Tablet',width:'768px',widthMedia:'992px'},{id:'Mobile',name:'Mobile',width:'390px',widthMedia:'600px'}]},assetManager:{assets:current.projectData.assets||[],upload:'/api/editor/media',uploadName:'files',uploadFile:uploadAssets}});
+  function handleSave(event) {
+    if ((event.ctrlKey || event.metaKey) && !event.altKey && event.key.toLowerCase() === 's') {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!event.repeat) saveNow();
+    }
+  }
+
+  useEffect(()=>{let disposed=false;const shortcut=new AbortController();const addSaveShortcut=target=>target?.addEventListener('keydown',handleSave,{capture:true,signal:shortcut.signal});addSaveShortcut(window); (async()=>{const res=await fetch('/api/editor/draft');if(res.status===401){router.replace('/editor/login');return}const loaded=await res.json();if(disposed)return;const originalData=draftHistoryData(loaded);const timeline=createDraftHistory(window.sessionStorage,loaded.updatedAt,originalData,loaded.pages[0].id);undoRef.current=timeline;const restored=timeline.current();const recovered=restored.data!==originalData;const current={...loaded,...JSON.parse(restored.data)};draftRef.current=current;setDoc(current);const grapesjs=(await import('grapesjs')).default;const editor=grapesjs.init({container:'#gjs',height:'100%',fromElement:false,projectData:current.projectData,storageManager:false,panels:{defaults:[]},canvas:{styles:canvasStyles},blockManager:{appendTo:'#blocks'},layerManager:{appendTo:'#layers'},styleManager:{appendTo:'#styles',sectors:[{name:'Layout',open:true,buildProps:['display','position','width','height','min-height','max-width','margin','padding','overflow','z-index','flex-direction','flex-wrap','justify-content','align-items','gap','grid-template-columns']},{name:'Typography',open:true,buildProps:['font-family','font-size','font-weight','line-height','letter-spacing','color','text-align','text-decoration']},{name:'Appearance',open:true,buildProps:['background-color','background','border','border-radius','box-shadow','opacity']},{name:'Effects',buildProps:['transform','transition']}]},traitManager:{appendTo:'#traits'},selectorManager:{appendTo:'#selectors'},deviceManager:{devices:[{id:'Desktop',name:'Desktop',width:''},{id:'Tablet',name:'Tablet',width:'768px',widthMedia:'992px'},{id:'Mobile',name:'Mobile',width:'390px',widthMedia:'600px'}]},assetManager:{assets:current.projectData.assets||[],upload:'/api/editor/media',uploadName:'files',uploadFile:uploadAssets}});
       editorRef.current=editor;
+      editor.on('canvas:frame:load', ({ window: frameWindow }) => addSaveShortcut(frameWindow));
+      addSaveShortcut(editor.Canvas.getWindow());
       setupDragModes(editor, notify);
       editor.Commands.add('core:undo', () => stepHistory(-1));
       editor.Commands.add('core:redo', () => stepHistory(1));
@@ -167,7 +194,9 @@ export default function EditorClient() {
       const clampToolbar = () => requestAnimationFrame(() => {
         if (editorRef.current !== editor) return;
         const next = readPosition(editor.getSelected());
-        setPosition(previous => previous?.x === next?.x && previous?.y === next?.y && previous?.anchor === next?.anchor ? previous : next);
+        const id = editor.getSelected()?.cid;
+        setPosition(previous => previous?.x === next?.x && previous?.y === next?.y && previous?.anchor === next?.anchor && previous?.id === id
+          ? previous : next && { ...next, id });
         const toolbar = editor.Canvas.getToolbarEl();
         const canvas = editor.Canvas.getElement();
         if (!toolbar || !canvas || toolbar.offsetParent === null) return;
@@ -184,7 +213,7 @@ export default function EditorClient() {
       editor.on('update',scheduleSave);editor.on('component:selected',(model)=>{if(model.get('tagName')!=='body')model.set({resizable:isImage(model)?{ratioDefault:true}:true,draggable:true,droppable:!isImage(model)},{silent:true});syncSelection();clampToolbar();});
       editor.on('component:deselected',syncSelection);editor.on('component:toggled',()=>{syncSelection();clampToolbar()});editor.on('canvas:tools:update',clampToolbar);editor.on('canvas:refresh',clampToolbar);
       setStatus('Draft loaded');
-    })();return()=>{disposed=true;clearTimeout(saveTimer.current);editorRef.current?.destroy();editorRef.current=null}},[]);
+    })();return()=>{disposed=true;shortcut.abort();clearTimeout(saveTimer.current);editorRef.current?.destroy();editorRef.current=null}},[]);
 
   function command(id){const e=editorRef.current;if(!e)return;if(id==='undo'||id==='redo')e.runCommand(`core:${id}`);else if(id==='preview')e.runCommand('preview');else if(id==='fullscreen')e.runCommand('fullscreen');}
   function switchDevice(name){setDevice(name);editorRef.current?.setDevice(name);requestAnimationFrame(()=>editorRef.current?.refresh({tools:true}))}
@@ -204,9 +233,9 @@ export default function EditorClient() {
   if(!doc)return <main className="login-shell">Loading editor…</main>;
   const selected=editorRef.current?.Pages.getSelected()?.id||doc.pages[0]?.id;
   return <div className="editor-app"><header className="editor-topbar"><div className="brand"><span className="brand-mark">LM</span><span className="brand-copy"><strong>Leah’s Studio</strong><small>Visual website editor</small></span></div><div className="topbar-group"><button className="tool-button" onClick={()=>command('undo')} title="Undo (Ctrl+Z)" aria-label="Undo">↶</button><button className="tool-button" onClick={()=>command('redo')} title="Redo" aria-label="Redo">↷</button></div>{selection.count>1&&<button className="tool-button selection-button" onClick={groupSelection} disabled={!selection.canGroup} title={selection.canGroup?'Group selected elements':'Selected elements must be in the same section'}>Group {selection.count}</button>}{selection.isGroup&&<button className="tool-button selection-button" title="Ungroup selected elements" onClick={ungroupSelection}>Ungroup</button>}<div className="topbar-group">{['Desktop','Tablet','Mobile'].map(d=><button key={d} className={`device-button ${device===d?'active':''}`} title={`Preview at ${d.toLowerCase()} width`} onClick={()=>switchDevice(d)}>{d}</button>)}</div><div className="topbar-spacer"/><button className="tool-button inspector-toggle" title="Toggle design controls" onClick={()=>setInspectorOpen(v=>!v)}>Design</button><button className="tool-button" title="View published versions" onClick={openHistory}>History</button><button className="tool-button" title="Editor account settings" onClick={()=>setPasswordOpen(true)}>Account</button><button className="tool-button" title="Preview the site" onClick={()=>command('preview')}>Preview</button><button className="tool-button" title="Save the draft" onClick={saveNow}>Save</button><button className="tool-button publish-button" title="Publish the draft to the live website" onClick={publish}>Publish</button><button className="tool-button" title="Sign out of the editor" onClick={logout}>Log out</button></header>
-    <main className="editor-main"><aside className="sidebar left"><div className="sidebar-tabs">{['blocks','pages','layers'].map(t=><button key={t} className={leftTab===t?'active':''} onClick={()=>setLeftTab(t)}>{t[0].toUpperCase()+t.slice(1)}</button>)}</div><div className="sidebar-body"><div id="blocks" style={{display:leftTab==='blocks'?'block':'none'}}/><div style={{display:leftTab==='pages'?'block':'none'}}><button className="mini-button" onClick={addPage}>＋ Add page</button><div className="panel-heading">Website pages</div><div className="page-list">{doc.pages.map(p=><div className="page-row" key={p.id}><button className={selected===p.id?'active':''} onClick={()=>selectPage(p.id)}>{p.title}<small style={{display:'block',color:'#888'}}>/{p.slug}</small></button><button className="mini-button" onClick={()=>editPage(p)} title="Page settings">✎</button><button className="mini-button" onClick={()=>duplicatePage(p)} title="Duplicate">⧉</button><button className="mini-button" onClick={()=>deletePage(p)} title="Delete">×</button></div>)}</div></div><div id="layers" style={{display:leftTab==='layers'?'block':'none'}}/></div></aside>
+    <main ref={mainRef} className="editor-main"><aside className="sidebar left"><SidebarResize side="left" mainRef={mainRef}/><div className="sidebar-tabs">{['blocks','pages','layers'].map(t=><button key={t} className={leftTab===t?'active':''} onClick={()=>setLeftTab(t)}>{t[0].toUpperCase()+t.slice(1)}</button>)}</div><div className="sidebar-body"><div id="blocks" style={{display:leftTab==='blocks'?'block':'none'}}/><div style={{display:leftTab==='pages'?'block':'none'}}><button className="mini-button" onClick={addPage}>＋ Add page</button><div className="panel-heading">Website pages</div><div className="page-list">{doc.pages.map(p=><div className="page-row" key={p.id}><button className={selected===p.id?'active':''} onClick={()=>selectPage(p.id)}>{p.title}<small style={{display:'block',color:'#888'}}>/{p.slug}</small></button><button className="mini-button" onClick={()=>editPage(p)} title="Page settings">✎</button><button className="mini-button" onClick={()=>duplicatePage(p)} title="Duplicate">⧉</button><button className="mini-button" onClick={()=>deletePage(p)} title="Delete">×</button></div>)}</div></div><div id="layers" style={{display:leftTab==='layers'?'block':'none'}}/></div></aside>
       <section className="canvas-shell"><input ref={imageInputRef} type="file" accept="image/*" hidden onChange={changeImage}/><div className="canvas-wrap" style={{maxWidth:device==='Tablet'?768:device==='Mobile'?390:'none'}}><div id="gjs"/></div></section>
-      <aside className={`sidebar right ${inspectorOpen?'open':''}`}><div className="sidebar-tabs">{['styles','settings'].map(t=><button key={t} className={rightTab===t?'active':''} onClick={()=>setRightTab(t)}>{t==='styles'?'Design':'Settings'}</button>)}</div><div className="sidebar-body">{rightTab==='styles'&&position&&<PositionFields key={`${position.x}:${position.y}:${position.anchor}`}
+      <aside className={`sidebar right ${inspectorOpen?'open':''}`}><SidebarResize side="right" mainRef={mainRef}/><div className="sidebar-tabs">{['styles','settings'].map(t=><button key={t} className={rightTab===t?'active':''} onClick={()=>setRightTab(t)}>{t==='styles'?'Design':'Settings'}</button>)}</div><div className="sidebar-body">{rightTab==='styles'&&position&&<PositionFields key={position.id}
         position={position} apply={applyPosition} copiedPosition={copiedPosition}
         onCopy={()=>{setCopiedPosition(position);notify('Position copied for use on another page.')}} />}
       <div id="selectors" style={{display:rightTab==='styles'?'block':'none'}}/><div id="styles" style={{display:rightTab==='styles'?'block':'none'}}/><div id="traits" style={{display:rightTab==='settings'?'block':'none'}}/>{rightTab==='settings'&&<p style={{color:'#777'}}>Select an element to edit its links, labels, alt text, and advanced attributes.</p>}</div></aside></main>
@@ -224,24 +253,64 @@ export default function EditorClient() {
     <footer className="editor-status"><span>{status}</span><span style={{marginLeft:'auto'}}>Revision {doc.revision} · autosave on</span></footer>{toast&&<div className={`toast ${toast.error?'error':''}`}>{toast.message}</div>}{history&&<div className="modal-backdrop" onClick={()=>setHistory(null)}><div className="modal" onClick={e=>e.stopPropagation()}><button className="mini-button" style={{float:'right'}} onClick={()=>setHistory(null)}>×</button><h2>Published versions</h2>{history.length===0&&<p>No published editor versions yet.</p>}{history.map(item=><div className="history-item" key={item.sha}><div><strong>{item.message}</strong><small style={{display:'block'}}>{new Date(item.date).toLocaleString()} · {item.author}</small></div><button className="mini-button" onClick={()=>restore(item.sha)}>Restore draft</button></div>)}</div></div>}{passwordOpen&&<PasswordModal close={()=>setPasswordOpen(false)} notify={notify}/>}</div>;
 }
 
-function PositionFields({ position, apply, copiedPosition, onCopy }) {
-  function submit(event) {
-    event.preventDefault();
-    const values = new FormData(event.currentTarget);
-    apply({ x: Number(values.get('x')), y: Number(values.get('y')) });
+function SidebarResize({ side, mainRef }) {
+  const drag = useRef(null);
+  const direction = side === 'left' ? 1 : -1;
+
+  function resize(width) {
+    const maximum = Math.min(520, window.innerWidth * 0.38);
+    const minimum = Math.min(160, window.innerWidth * 0.22);
+    mainRef.current?.style.setProperty(`--editor-sidebar-${side}`, `${Math.round(Math.max(minimum, Math.min(maximum, width)))}px`);
   }
 
-  return <form className="position-fields" onSubmit={submit}>
+  return <div className={`sidebar-resize sidebar-resize-${side}`} role="separator" aria-orientation="vertical"
+    aria-label={`Resize ${side} sidebar`} tabIndex={0}
+    onPointerDown={event => {
+      if (event.button !== 0) return;
+      drag.current = { x: event.clientX, width: event.currentTarget.parentElement.offsetWidth };
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }}
+    onPointerMove={event => {
+      if (drag.current && event.currentTarget.hasPointerCapture(event.pointerId)) {
+        resize(drag.current.width + (event.clientX - drag.current.x) * direction);
+      }
+    }}
+    onLostPointerCapture={() => { drag.current = null; }}
+    onKeyDown={event => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      resize(event.currentTarget.parentElement.offsetWidth + (event.key === 'ArrowRight' ? 12 : -12) * direction);
+    }} />;
+}
+
+function PositionFields({ position, apply, copiedPosition, onCopy }) {
+  const formRef = useRef(null);
+  function syncFields() {
+    const form = formRef.current;
+    if (!form) return;
+    for (const axis of ['x', 'y']) {
+      const field = form.elements.namedItem(axis);
+      if (field !== document.activeElement) field.value = position[axis];
+    }
+  }
+  useEffect(syncFields, [position]);
+
+  function change(event) {
+    const axis = event.target.name;
+    const number = event.target.valueAsNumber;
+    if (Number.isFinite(number)) apply({ ...position, [axis]: number });
+  }
+
+  return <form ref={formRef} className="position-fields" onSubmit={event => event.preventDefault()}>
     <strong>Position on page</strong>
     <div className="position-coordinates">
-      <label>X (px)<input type="number" name="x" step="any" defaultValue={position.x} required /></label>
-      <label>Y (px)<input type="number" name="y" step="any" defaultValue={position.y} required /></label>
+      <label>X (px)<input type="number" name="x" step="any" defaultValue={position.x} onChange={change} onBlur={syncFields} /></label>
+      <label>Y (px)<input type="number" name="y" step="any" defaultValue={position.y} onChange={change} onBlur={syncFields} /></label>
     </div>
     <small>{position.anchor ? `Anchored ${position.anchor} in its container` : 'Measured from the top-left of the page'}</small>
     <div className="position-actions">
-      <button className="mini-button" type="submit">Apply</button>
-      <button className="mini-button" type="button" onClick={onCopy}>Copy position</button>
-      <button className="mini-button" type="button" disabled={!copiedPosition} onClick={()=>apply(copiedPosition)}>Use copied position</button>
+      <button type="button" onClick={onCopy} title="Copy position">Copy</button>
+      <button type="button" disabled={!copiedPosition} onClick={()=>apply(copiedPosition)} title="Paste copied position">Paste</button>
     </div>
   </form>;
 }
