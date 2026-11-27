@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import BackgroundColorPicker from '@/components/BackgroundColorPicker';
 import { GalleryDialog, ShadowDialog } from '@/components/EditorVisualDialogs';
 import { galleryPhoto, mediaSource, migrateGalleries, newGallery } from '@/lib/editor-gallery';
+import { applyElementShadow, galleryPhotoShadow } from '@/lib/editor-shadows';
 import { createDraftHistory, draftHistoryData } from '@/lib/editor-history';
 import { detachBackgroundImage, getBackgroundStyle, replaceImageTarget, uploadEditorMedia } from '@/lib/editor-media';
 import { blockIcons, isImage, labelSelectionTools, setupDragModes, setupGalleryInteractions } from '@/lib/editor-interactions';
@@ -161,7 +162,9 @@ export default function EditorClient() {
       if (item.link) {
         item.image.addAttributes({ alt: item.alt });
         if (item.link.index() !== index) item.link.move(gallery, { at: index });
-      } else gallery.append(galleryPhoto(item.src, item.alt), { at: index });
+      }
+      const link = item.link || gallery.append(galleryPhoto(item.src, item.alt), { at: index })[0];
+      if (link) galleryPhotoShadow(link, item.shadow || 'default');
     });
     gallery.addAttributes({ 'data-gallery-layout': layout, 'data-gallery-shape': shape });
     editorRef.current?.select(gallery);
@@ -173,11 +176,7 @@ export default function EditorClient() {
   function applyShadow(value) {
     const model = shadowTarget;
     if (model?.parent()) {
-      model.addStyle({ 'box-shadow': value });
-      const parent = model.parent();
-      if (isImage(model) && parent.getAttributes()['data-gallery-photo']) {
-        parent.addStyle({ '--gallery-photo-shadow': value === 'none' ? 'none' : `drop-shadow(${value})` });
-      }
+      applyElementShadow(model, value);
       scheduleSave();
     }
     setShadowTarget(null);

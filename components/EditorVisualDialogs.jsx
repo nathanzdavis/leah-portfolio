@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { galleryLayouts, galleryShapes, mediaSource } from '@/lib/editor-gallery';
+import { shadowPresets, shadowValue } from '@/lib/editor-shadows';
 
 function VisualDialog({ title, onClose, children, className = '' }) {
   const ref = useRef(null);
@@ -24,7 +25,8 @@ export function GalleryDialog({ gallery, assets, onClose, onApply, onUpload }) {
     const image = link.components().models.find(child => child.get('tagName') === 'img');
     if (!image) return [];
     const { src, alt = '' } = image.getAttributes();
-    return [{ key: link.cid, link, image, src: mediaSource(src), alt }];
+    const shadow = link.getAttributes()['data-gallery-shadow'] || (image.getStyle()['box-shadow'] ? 'existing' : 'default');
+    return [{ key: link.cid, link, image, src: mediaSource(src), alt, shadow }];
   }));
   const [library, setLibrary] = useState(assets);
   const [busy, setBusy] = useState(false);
@@ -91,6 +93,15 @@ export function GalleryDialog({ gallery, assets, onClose, onApply, onUpload }) {
         <img src={item.src} alt="" />
         <input aria-label={`Alt text for photo ${index+1}`} placeholder="Alt text" value={item.alt}
           onChange={event=>setItems(existing=>existing.map(other=>other===item?{...other,alt:event.target.value}:other))} />
+        <select aria-label={`Shadow for photo ${index+1}`} title="Photo shadow" value={item.shadow || 'default'}
+          onChange={event=>setItems(existing=>existing.map(other=>other===item?{...other,shadow:event.target.value}:other))}>
+          <option value="default">Site default</option>
+          {item.image?.getStyle()['box-shadow'] && !item.link?.getAttributes()['data-gallery-shadow'] && <option value="existing">Keep existing</option>}
+          <option value="soft">Smooth</option>
+          <option value="hard">Hard edge</option>
+          <option value="subtle">Subtle</option>
+          <option value="none">No shadow</option>
+        </select>
         <button className="mini-button" type="button" title="Move earlier" aria-label={`Move photo ${index+1} earlier`} disabled={index===0} onClick={()=>move(index,-1)}>↑</button>
         <button className="mini-button" type="button" title="Move later" aria-label={`Move photo ${index+1} later`} disabled={index===items.length-1} onClick={()=>move(index,1)}>↓</button>
         <button className="mini-button" type="button" title="Remove from this gallery" aria-label={`Remove photo ${index+1}`}
@@ -120,18 +131,11 @@ export function GalleryDialog({ gallery, assets, onClose, onApply, onUpload }) {
   </VisualDialog>;
 }
 
-const shadowPresets = {
-  soft: { x:0, y:8, blur:24, opacity:24 },
-  hard: { x:5, y:5, blur:0, opacity:40 },
-  subtle: { x:0, y:3, blur:8, opacity:16 },
-};
-
 export function ShadowDialog({ onClose, onApply }) {
   const [preset, setPreset] = useState('soft');
   const [settings, setSettings] = useState(shadowPresets.soft);
   const [color, setColor] = useState('#000000');
-  const alpha = Math.round(settings.opacity / 100 * 255).toString(16).padStart(2, '0');
-  const value = preset === 'none' ? 'none' : `${settings.x}px ${settings.y}px ${settings.blur}px ${color}${alpha}`;
+  const value = preset === 'none' ? 'none' : shadowValue(settings, color);
   return <VisualDialog title="Element shadow" onClose={onClose}>
     <div className="shadow-preview"><span style={{ boxShadow:value }}>Preview</span></div>
     <div className="gallery-modal-options">

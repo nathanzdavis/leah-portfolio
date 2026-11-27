@@ -4,6 +4,7 @@ import test from 'node:test';
 import grapesjs from 'grapesjs';
 import { migrateGalleries } from '../lib/editor-gallery.js';
 import { setupGalleryInteractions } from '../lib/editor-interactions.js';
+import { galleryPhotoShadow } from '../lib/editor-shadows.js';
 
 function collect(node, predicate) {
   return [
@@ -65,6 +66,31 @@ test('hover and selection resolve to the gallery rather than its photos', () => 
     assert.equal(model.getHovered(), outside);
     editor.select(outside);
     assert.equal(editor.getSelected(), outside);
+  } finally {
+    editor.destroy();
+  }
+});
+
+test('a gallery shadow applies to one photo and follows its mask', () => {
+  const editor = grapesjs.init({ headless: true, storageManager: false });
+  try {
+    const [link, other] = editor.addComponents(Array.from({ length: 2 }, () => ({
+      type: 'link',
+      attributes: { 'data-gallery-photo': 'true' },
+      components: [{ type: 'image', src: '/photo.jpg' }],
+    })));
+    const image = link.components().at(0);
+    galleryPhotoShadow(link, 'hard');
+    assert.equal(image.getStyle()['box-shadow'], '5px 5px 0px #00000066');
+    assert.equal(link.getStyle()['--gallery-photo-shadow'], 'drop-shadow(5px 5px 0px #00000066)');
+    assert.equal(link.getAttributes()['data-gallery-shadow'], 'hard');
+    assert.equal(other.components().at(0).getStyle()['box-shadow'], undefined);
+    galleryPhotoShadow(link, 'none');
+    assert.equal(image.getStyle()['box-shadow'], 'none');
+    galleryPhotoShadow(link, 'default');
+    assert.equal(image.getStyle()['box-shadow'], undefined);
+    assert.equal(link.getStyle()['--gallery-photo-shadow'], undefined);
+    assert.equal(link.getAttributes()['data-gallery-shadow'], undefined);
   } finally {
     editor.destroy();
   }
