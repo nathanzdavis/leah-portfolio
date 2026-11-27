@@ -4,7 +4,7 @@ import { flushSync } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import BackgroundColorPicker from '@/components/BackgroundColorPicker';
 import { GalleryDialog, ShadowDialog } from '@/components/EditorVisualDialogs';
-import { galleryPhoto, mediaSource, migrateGalleries, newGallery } from '@/lib/editor-gallery';
+import { findGallery, galleryPhoto, mediaSource, migrateGalleries, newGallery } from '@/lib/editor-gallery';
 import { createDraftHistory, draftHistoryData } from '@/lib/editor-history';
 import { detachBackgroundImage, getBackgroundStyle, replaceImageTarget, uploadEditorMedia } from '@/lib/editor-media';
 import { blockIcons, isImage, labelSelectionTools, setupDragModes, setupGalleryHover } from '@/lib/editor-interactions';
@@ -119,6 +119,22 @@ export default function EditorClient() {
   }
 
   function chooseImage(target) {
+    const editor = editorRef.current;
+    if (editor && !target.background && isImage(target.model) && !findGallery(target.model)) {
+      editor.AssetManager.open({
+        types: ['image'],
+        accept: 'image/*',
+        select(asset) {
+          const src = mediaSource(asset.getSrc());
+          if (!src || editorRef.current !== editor || !target.model.parent()) return;
+          replaceImageTarget(target, src);
+          editor.AssetManager.close();
+          scheduleSave();
+          notify('Image replaced');
+        },
+      });
+      return;
+    }
     imageTargetRef.current = target;
     imageInputRef.current?.click();
   }
