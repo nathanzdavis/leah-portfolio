@@ -81,3 +81,18 @@ test('a hero background can be replaced and published without changing its other
     editor.destroy();
   }
 });
+
+test('an empty div can gain a background image without losing its background color', () => {
+  const editor = grapesjs.init({ headless: true, storageManager: false });
+  try {
+    const [div] = editor.addComponents({ tagName: 'div', style: { 'background-color': '#d18966' } });
+    const target = getImageTarget(div);
+    assert.equal(target.background, 'none');
+    replaceImageTarget(target, '/static/uploads/new.webp');
+    assert.equal(div.getStyle()['background-image'], 'url("/static/uploads/new.webp")');
+    assert.equal(div.getStyle()['background-size'], 'cover');
+    assert.equal(div.getStyle()['background-color'], '#d18966');
+  } finally {
+    editor.destroy();
+  }
+});

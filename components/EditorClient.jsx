@@ -1,7 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { replaceImageTarget, uploadEditorMedia } from '@/lib/editor-media';
+import BackgroundColorPicker from '@/components/BackgroundColorPicker';
+import { getBackgroundStyle, replaceImageTarget, uploadEditorMedia } from '@/lib/editor-media';
 import { blockIcons, isImage, labelSelectionTools, setupDragModes } from '@/lib/editor-interactions';
 
 const canvasStyles = ['/static/css/screen.min.css','/static/css/custom.min.css','/static/css/about.css','/static/css/repertoire.css','/static/css/gallery.css','/static/css/sheet-music.css','https://fonts.googleapis.com/css?family=Roboto+Slab|Aguafina+Script|Albert+Sans|Aboreto&display=swap'];
@@ -10,6 +11,7 @@ export default function EditorClient() {
   const editorRef = useRef(null); const draftRef = useRef(null); const saveTimer = useRef(null);
   const imageInputRef = useRef(null);
   const imageTargetRef = useRef(null);
+  const [colorTarget, setColorTarget] = useState(null);
   const [doc,setDoc]=useState(null); const [leftTab,setLeftTab]=useState('blocks'); const [rightTab,setRightTab]=useState('styles'); const [device,setDevice]=useState('Desktop'); const [inspectorOpen,setInspectorOpen]=useState(false);
   const [selection,setSelection]=useState({count:0,canGroup:false,isGroup:false});
   const [status,setStatus]=useState('Loading draft…'); const [toast,setToast]=useState(null); const [history,setHistory]=useState(null); const [passwordOpen,setPasswordOpen]=useState(false); const router=useRouter();
@@ -78,7 +80,7 @@ export default function EditorClient() {
         const toolbar = editor.Canvas.getToolbarEl();
         const canvas = editor.Canvas.getElement();
         if (!toolbar || !canvas || toolbar.offsetParent === null) return;
-        labelSelectionTools(toolbar, editor.getSelected(), chooseImage);
+        labelSelectionTools(toolbar, editor.getSelected(), chooseImage, setColorTarget);
         const bar = toolbar.getBoundingClientRect();
         const bounds = canvas.getBoundingClientRect();
         const style = getComputedStyle(toolbar);
@@ -114,6 +116,17 @@ export default function EditorClient() {
     <main className="editor-main"><aside className="sidebar left"><div className="sidebar-tabs">{['blocks','pages','layers'].map(t=><button key={t} className={leftTab===t?'active':''} onClick={()=>setLeftTab(t)}>{t[0].toUpperCase()+t.slice(1)}</button>)}</div><div className="sidebar-body"><div id="blocks" style={{display:leftTab==='blocks'?'block':'none'}}/><div style={{display:leftTab==='pages'?'block':'none'}}><button className="mini-button" onClick={addPage}>＋ Add page</button><div className="panel-heading">Website pages</div><div className="page-list">{doc.pages.map(p=><div className="page-row" key={p.id}><button className={selected===p.id?'active':''} onClick={()=>selectPage(p.id)}>{p.title}<small style={{display:'block',color:'#888'}}>/{p.slug}</small></button><button className="mini-button" onClick={()=>editPage(p)} title="Page settings">✎</button><button className="mini-button" onClick={()=>duplicatePage(p)} title="Duplicate">⧉</button><button className="mini-button" onClick={()=>deletePage(p)} title="Delete">×</button></div>)}</div></div><div id="layers" style={{display:leftTab==='layers'?'block':'none'}}/></div></aside>
       <section className="canvas-shell"><input ref={imageInputRef} type="file" accept="image/*" hidden onChange={changeImage}/><div className="canvas-wrap" style={{maxWidth:device==='Tablet'?768:device==='Mobile'?390:'none'}}><div id="gjs"/></div></section>
       <aside className={`sidebar right ${inspectorOpen?'open':''}`}><div className="sidebar-tabs">{['styles','settings'].map(t=><button key={t} className={rightTab===t?'active':''} onClick={()=>setRightTab(t)}>{t==='styles'?'Design':'Settings'}</button>)}</div><div className="sidebar-body"><div id="selectors" style={{display:rightTab==='styles'?'block':'none'}}/><div id="styles" style={{display:rightTab==='styles'?'block':'none'}}/><div id="traits" style={{display:rightTab==='settings'?'block':'none'}}/>{rightTab==='settings'&&<p style={{color:'#777'}}>Select an element to edit its links, labels, alt text, and advanced attributes.</p>}</div></aside></main>
+    {colorTarget && <BackgroundColorPicker
+      currentColor={getBackgroundStyle(colorTarget)?.backgroundColor}
+      onClose={() => setColorTarget(null)}
+      onApply={color => {
+        if (colorTarget.parent()) {
+          colorTarget.addStyle({ 'background-color': color });
+          scheduleSave();
+        }
+        setColorTarget(null);
+      }}
+    />}
     <footer className="editor-status"><span>{status}</span><span style={{marginLeft:'auto'}}>Revision {doc.revision} · autosave on</span></footer>{toast&&<div className={`toast ${toast.error?'error':''}`}>{toast.message}</div>}{history&&<div className="modal-backdrop" onClick={()=>setHistory(null)}><div className="modal" onClick={e=>e.stopPropagation()}><button className="mini-button" style={{float:'right'}} onClick={()=>setHistory(null)}>×</button><h2>Published versions</h2>{history.length===0&&<p>No published editor versions yet.</p>}{history.map(item=><div className="history-item" key={item.sha}><div><strong>{item.message}</strong><small style={{display:'block'}}>{new Date(item.date).toLocaleString()} · {item.author}</small></div><button className="mini-button" onClick={()=>restore(item.sha)}>Restore draft</button></div>)}</div></div>}{passwordOpen&&<PasswordModal close={()=>setPasswordOpen(false)} notify={notify}/>}</div>;
 }
 
