@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 5,
-  "updatedAt": "2026-11-27T23:22:50.710Z",
+  "updatedAt": "2026-11-27T23:22:55.720Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -630,24 +630,6 @@
                           "content": "\n                "
                         },
                         {
-                          "tagName": "h2",
-                          "type": "text",
-                          "droppable": true,
-                          "resizable": true,
-                          "classes": [
-                            "promo__slogan"
-                          ],
-                          "attributes": {
-                            "id": "i2fqh"
-                          },
-                          "components": [
-                            {
-                              "type": "textnode",
-                              "content": "Cellist | Percussionist | Composer"
-                            }
-                          ]
-                        },
-                        {
                           "type": "textnode",
                           "content": "\n            "
                         }
@@ -656,6 +638,24 @@
                     {
                       "type": "textnode",
                       "content": "\n        "
+                    },
+                    {
+                      "tagName": "h2",
+                      "type": "text",
+                      "droppable": true,
+                      "resizable": true,
+                      "classes": [
+                        "promo__slogan"
+                      ],
+                      "attributes": {
+                        "id": "i2fqh"
+                      },
+                      "components": [
+                        {
+                          "type": "textnode",
+                          "content": "Cellist | Percussionist | Composer"
+                        }
+                      ]
                     }
                   ]
                 },
