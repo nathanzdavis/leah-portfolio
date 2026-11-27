@@ -2,8 +2,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import BackgroundColorPicker from '@/components/BackgroundColorPicker';
+import { createDraftHistory, draftHistoryData } from '@/lib/editor-history';
 import { detachBackgroundImage, getBackgroundStyle, replaceImageTarget, uploadEditorMedia } from '@/lib/editor-media';
 import { blockIcons, isImage, labelSelectionTools, setupDragModes } from '@/lib/editor-interactions';
+import { readPosition, setPagePosition } from '@/lib/editor-position';
 
 const canvasStyles = ['/static/css/screen.min.css','/static/css/custom.min.css','/static/css/about.css','/static/css/repertoire.css','/static/css/gallery.css','/static/css/sheet-music.css','https://fonts.googleapis.com/css?family=Roboto+Slab|Aguafina+Script|Albert+Sans|Aboreto&display=swap'];
 
@@ -11,6 +13,11 @@ export default function EditorClient() {
   const editorRef = useRef(null); const draftRef = useRef(null); const saveTimer = useRef(null);
   const imageInputRef = useRef(null);
   const imageTargetRef = useRef(null);
+  const undoRef = useRef(null);
+  const saveQueue = useRef(Promise.resolve());
+  const restoringRef = useRef(false);
+  const [copiedPosition, setCopiedPosition] = useState(null);
+  const [position, setPosition] = useState(null);
   const [colorTarget, setColorTarget] = useState(null);
   const [doc,setDoc]=useState(null); const [leftTab,setLeftTab]=useState('blocks'); const [rightTab,setRightTab]=useState('styles'); const [device,setDevice]=useState('Desktop'); const [inspectorOpen,setInspectorOpen]=useState(false);
   const [selection,setSelection]=useState({count:0,canGroup:false,isGroup:false});
@@ -18,8 +25,73 @@ export default function EditorClient() {
 
   function notify(message,error=false){setToast({message,error});setTimeout(()=>setToast(null),3500)}
   function snapshot(editor=editorRef.current){ if(!editor||!draftRef.current)return null; return {...draftRef.current,updatedAt:new Date().toISOString(),projectData:editor.getProjectData()}; }
-  async function saveNow(){const value=snapshot();if(!value)return;setStatus('Saving draft…');const res=await fetch('/api/editor/draft',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(value)});const data=await res.json();if(!res.ok){setStatus('Draft not saved');notify(data.error||'Save failed',true);return false}draftRef.current=value;setDoc(value);setStatus(`Draft saved ${new Date(data.savedAt).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}`);editorRef.current?.clearDirtyCount();return true}
-  function scheduleSave(){clearTimeout(saveTimer.current);setStatus('Unsaved changes');saveTimer.current=setTimeout(saveNow,1400)}
+  function saveNow() {
+    clearTimeout(saveTimer.current);
+    const save = async () => {
+      const value = snapshot();
+      if (!value) return false;
+      setStatus('Saving draft…');
+      try {
+        const response = await fetch('/api/editor/draft', {
+          method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(value),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Save failed');
+        undoRef.current?.saved(value.updatedAt);
+        draftRef.current = { ...draftRef.current, updatedAt: value.updatedAt };
+        setStatus(`Draft saved ${new Date(data.savedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`);
+        return true;
+      } catch (error) {
+        setStatus('Draft not saved');
+        notify(error.message, true);
+        return false;
+      }
+    };
+    saveQueue.current = saveQueue.current.then(save);
+    return saveQueue.current;
+  }
+
+  function scheduleSave() {
+    if (restoringRef.current) return;
+    const value = snapshot();
+    if (value) undoRef.current?.record(draftHistoryData(value), editorRef.current.Pages.getSelected()?.id);
+    clearTimeout(saveTimer.current);
+    setStatus('Unsaved changes');
+    saveTimer.current = setTimeout(saveNow, 1400);
+  }
+
+  function stepHistory(direction) {
+    const editor = editorRef.current;
+    const timeline = undoRef.current;
+    const value = snapshot();
+    if (!timeline || !editor || !value) return;
+    const page = editor.Pages.getSelected()?.id;
+    timeline.record(draftHistoryData(value), page);
+    const entry = timeline.step(direction);
+    if (!entry) return notify(direction < 0 ? 'No earlier edit in this tab.' : 'No edit to redo.');
+    restoringRef.current = true;
+    try {
+      const restored = JSON.parse(entry.data);
+      draftRef.current = { ...draftRef.current, ...restored };
+      editor.select();
+      editor.loadProjectData(restored.projectData);
+      editor.Pages.select(editor.Pages.get(entry.pageId) || editor.Pages.get(page) || editor.Pages.getMain());
+      setDoc(draftRef.current);
+      timeline.normalize(draftHistoryData(snapshot()));
+    } finally {
+      restoringRef.current = false;
+    }
+    scheduleSave();
+  }
+
+  function applyPosition(coordinates) {
+    const model = editorRef.current?.getSelected();
+    if (setPagePosition(model, coordinates.x, coordinates.y)) {
+      setPosition(readPosition(model));
+      editorRef.current.refresh({ tools: true });
+      scheduleSave();
+    }
+  }
 
   function chooseImage(target) {
     imageTargetRef.current = target;
@@ -73,9 +145,18 @@ export default function EditorClient() {
     }
   }
 
-  useEffect(()=>{let disposed=false; (async()=>{const res=await fetch('/api/editor/draft');if(res.status===401){router.replace('/editor/login');return}const loaded=await res.json();if(disposed)return;draftRef.current=loaded;setDoc(loaded);const grapesjs=(await import('grapesjs')).default;const editor=grapesjs.init({container:'#gjs',height:'100%',fromElement:false,projectData:loaded.projectData,storageManager:false,panels:{defaults:[]},canvas:{styles:canvasStyles},blockManager:{appendTo:'#blocks'},layerManager:{appendTo:'#layers'},styleManager:{appendTo:'#styles',sectors:[{name:'Layout',open:true,buildProps:['display','position','width','height','min-height','max-width','margin','padding','overflow','z-index','flex-direction','flex-wrap','justify-content','align-items','gap','grid-template-columns']},{name:'Typography',open:true,buildProps:['font-family','font-size','font-weight','line-height','letter-spacing','color','text-align','text-decoration']},{name:'Appearance',open:true,buildProps:['background-color','background','border','border-radius','box-shadow','opacity']},{name:'Effects',buildProps:['transform','transition']}]},traitManager:{appendTo:'#traits'},selectorManager:{appendTo:'#selectors'},deviceManager:{devices:[{id:'Desktop',name:'Desktop',width:''},{id:'Tablet',name:'Tablet',width:'768px',widthMedia:'992px'},{id:'Mobile',name:'Mobile',width:'390px',widthMedia:'600px'}]},assetManager:{assets:loaded.projectData.assets||[],upload:'/api/editor/media',uploadName:'files',uploadFile:uploadAssets}});
+  useEffect(()=>{let disposed=false; (async()=>{const res=await fetch('/api/editor/draft');if(res.status===401){router.replace('/editor/login');return}const loaded=await res.json();if(disposed)return;const originalData=draftHistoryData(loaded);const timeline=createDraftHistory(window.sessionStorage,loaded.updatedAt,originalData,loaded.pages[0].id);undoRef.current=timeline;const restored=timeline.current();const recovered=restored.data!==originalData;const current={...loaded,...JSON.parse(restored.data)};draftRef.current=current;setDoc(current);const grapesjs=(await import('grapesjs')).default;const editor=grapesjs.init({container:'#gjs',height:'100%',fromElement:false,projectData:current.projectData,storageManager:false,panels:{defaults:[]},canvas:{styles:canvasStyles},blockManager:{appendTo:'#blocks'},layerManager:{appendTo:'#layers'},styleManager:{appendTo:'#styles',sectors:[{name:'Layout',open:true,buildProps:['display','position','width','height','min-height','max-width','margin','padding','overflow','z-index','flex-direction','flex-wrap','justify-content','align-items','gap','grid-template-columns']},{name:'Typography',open:true,buildProps:['font-family','font-size','font-weight','line-height','letter-spacing','color','text-align','text-decoration']},{name:'Appearance',open:true,buildProps:['background-color','background','border','border-radius','box-shadow','opacity']},{name:'Effects',buildProps:['transform','transition']}]},traitManager:{appendTo:'#traits'},selectorManager:{appendTo:'#selectors'},deviceManager:{devices:[{id:'Desktop',name:'Desktop',width:''},{id:'Tablet',name:'Tablet',width:'768px',widthMedia:'992px'},{id:'Mobile',name:'Mobile',width:'390px',widthMedia:'600px'}]},assetManager:{assets:current.projectData.assets||[],upload:'/api/editor/media',uploadName:'files',uploadFile:uploadAssets}});
       editorRef.current=editor;
       setupDragModes(editor, notify);
+      editor.Commands.add('core:undo', () => stepHistory(-1));
+      editor.Commands.add('core:redo', () => stepHistory(1));
+      editor.onReady(() => {
+        if (disposed) return;
+        const page = editor.Pages.get(restored.pageId);
+        if (page) editor.Pages.select(page);
+        timeline.normalize(draftHistoryData(snapshot()));
+        if (recovered) scheduleSave();
+      });
       const blocks=[['text','Text','<p>Double-click to edit this text</p>'],['heading','Heading','<h2>New heading</h2>'],['button','Button','<a class="editor-button" href="#">Button</a>'],['image','Image',{type:'image'}],['section','Section','<section style="padding:60px 24px"><div style="max-width:1100px;margin:auto"><h2>New section</h2><p>Add content here.</p></div></section>'],['columns','Columns','<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px"><div>Column one</div><div>Column two</div></div>'],['card','Card','<article style="padding:24px;border:1px solid #ddd;border-radius:12px"><h3>Card title</h3><p>Card content</p></article>'],['divider','Divider','<hr>'],['spacer','Spacer','<div style="height:48px"></div>'],['video','Video',{type:'video'}]];
       blocks.forEach(([id,label,content])=>editor.BlockManager.add(id,{
         label, content, media: `<span class="editor-block-icon" aria-hidden="true">${blockIcons[id]}</span>`,
@@ -85,6 +166,8 @@ export default function EditorClient() {
       const syncSelection=()=>{const selected=editor.getSelectedAll();const parent=selected[0]?.parent();setSelection({count:selected.length,canGroup:selected.length>1&&selected.every(item=>item.parent()===parent),isGroup:selected.length===1&&selected[0].getAttributes?.()['data-editor-group']==='true'});};
       const clampToolbar = () => requestAnimationFrame(() => {
         if (editorRef.current !== editor) return;
+        const next = readPosition(editor.getSelected());
+        setPosition(previous => previous?.x === next?.x && previous?.y === next?.y && previous?.anchor === next?.anchor ? previous : next);
         const toolbar = editor.Canvas.getToolbarEl();
         const canvas = editor.Canvas.getElement();
         if (!toolbar || !canvas || toolbar.offsetParent === null) return;
@@ -103,7 +186,7 @@ export default function EditorClient() {
       setStatus('Draft loaded');
     })();return()=>{disposed=true;clearTimeout(saveTimer.current);editorRef.current?.destroy();editorRef.current=null}},[]);
 
-  function command(id){const e=editorRef.current;if(!e)return;if(id==='undo')e.UndoManager.undo();else if(id==='redo')e.UndoManager.redo();else if(id==='preview')e.runCommand('preview');else if(id==='fullscreen')e.runCommand('fullscreen');}
+  function command(id){const e=editorRef.current;if(!e)return;if(id==='undo'||id==='redo')e.runCommand(`core:${id}`);else if(id==='preview')e.runCommand('preview');else if(id==='fullscreen')e.runCommand('fullscreen');}
   function switchDevice(name){setDevice(name);editorRef.current?.setDevice(name);requestAnimationFrame(()=>editorRef.current?.refresh({tools:true}))}
   function groupSelection(){const editor=editorRef.current;const items=editor?.getSelectedAll()||[];const parent=items[0]?.parent();if(items.length<2||!parent||!items.every(item=>item.parent()===parent))return notify('Select two or more elements in the same section to group them.',true);const measured=items.map(model=>({model,rect:model.getEl()?.getBoundingClientRect()}));if(measured.some(item=>!item.rect))return notify('Those elements are not ready to group yet.',true);const left=Math.min(...measured.map(item=>item.rect.left));const top=Math.min(...measured.map(item=>item.rect.top));const right=Math.max(...measured.map(item=>item.rect.right));const bottom=Math.max(...measured.map(item=>item.rect.bottom));const at=Math.min(...items.map(item=>item.index()));const group=parent.append({tagName:'div',name:'Group',attributes:{'data-editor-group':'true'},style:{position:'absolute',width:`${right-left}px`,height:`${bottom-top}px`},draggable:true,droppable:true,resizable:true})[0];group.move(parent,{at});const containingRect=group.getEl()?.offsetParent?.getBoundingClientRect()||parent.getEl()?.getBoundingClientRect();if(!containingRect){group.remove();return notify('Those elements cannot be grouped here.',true)}group.addStyle({left:`${left-containingRect.left}px`,top:`${top-containingRect.top}px`});measured.sort((a,b)=>a.model.index()-b.model.index()).forEach(({model,rect},index)=>{model.addStyle({position:'absolute',left:`${rect.left-left}px`,top:`${rect.top-top}px`,width:`${rect.width}px`,height:`${rect.height}px`,margin:'0'});model.move(group,{at:index})});editor.select(group);setSelection({count:1,canGroup:false,isGroup:true});notify(`Grouped ${items.length} elements`);scheduleSave()}
   function ungroupSelection(){const editor=editorRef.current;const group=editor?.getSelected();if(!group||group.getAttributes?.()['data-editor-group']!=='true')return;const parent=group.parent();const children=[...group.components().models];if(!parent||!children.length)return;const measured=children.map(model=>({model,rect:model.getEl()?.getBoundingClientRect()})).filter(item=>item.rect);const at=group.index();measured.forEach(({model,rect},index)=>{model.move(parent,{at:at+index});const containingRect=model.getEl()?.offsetParent?.getBoundingClientRect()||parent.getEl()?.getBoundingClientRect();if(containingRect)model.addStyle({position:'absolute',left:`${rect.left-containingRect.left}px`,top:`${rect.top-containingRect.top}px`,width:`${rect.width}px`,height:`${rect.height}px`,margin:'0'})});group.remove();editor.select(measured.map(item=>item.model));setSelection({count:measured.length,canGroup:measured.length>1,isGroup:false});notify('Group separated');scheduleSave()}
@@ -116,14 +199,17 @@ export default function EditorClient() {
   async function publish(){if(!confirm('Publish this draft to the live website?'))return;if(!await saveNow())return;setStatus('Publishing to GitHub…');const res=await fetch('/api/editor/publish',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(snapshot())});const data=await res.json();if(!res.ok){setStatus('Publish failed');return notify(data.error||'Publish failed',true)}draftRef.current={...draftRef.current,revision:data.revision};setStatus('Committed. Waiting for Vercel…');notify('Published to GitHub. Vercel deployment started.');pollDeployment(data.commitSha)}
   async function pollDeployment(sha){for(let i=0;i<40;i++){await new Promise(r=>setTimeout(r,5000));const res=await fetch(`/api/editor/deployment?sha=${sha}`);const data=await res.json();if(['ready','succeeded'].includes(data.state)){setStatus('Live on Vercel');notify('Your website is live.');return}if(['error','canceled','failed'].includes(data.state)){setStatus('Deployment failed');notify(data.message||'Vercel deployment failed',true);return}setStatus(data.message||`Vercel: ${data.state}`)}setStatus('Deployment still in progress')}
   async function openHistory(){const res=await fetch('/api/editor/history');setHistory(await res.json())}
-  async function restore(sha){if(!confirm('Restore this version into your draft? Nothing goes live until you publish.'))return;const res=await fetch('/api/editor/restore',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sha})});const data=await res.json();if(!res.ok)return notify(data.error,true);location.reload()}
+  async function restore(sha){if(!confirm('Restore this version into your draft? Nothing goes live until you publish.'))return;clearTimeout(saveTimer.current);await saveQueue.current;const res=await fetch('/api/editor/restore',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sha})});const data=await res.json();if(!res.ok)return notify(data.error,true);undoRef.current?.clear();location.reload()}
   async function logout(){await fetch('/api/auth/logout',{method:'POST'});router.replace('/editor/login');router.refresh()}
   if(!doc)return <main className="login-shell">Loading editor…</main>;
   const selected=editorRef.current?.Pages.getSelected()?.id||doc.pages[0]?.id;
   return <div className="editor-app"><header className="editor-topbar"><div className="brand"><span className="brand-mark">LM</span><span className="brand-copy"><strong>Leah’s Studio</strong><small>Visual website editor</small></span></div><div className="topbar-group"><button className="tool-button" onClick={()=>command('undo')} title="Undo (Ctrl+Z)" aria-label="Undo">↶</button><button className="tool-button" onClick={()=>command('redo')} title="Redo" aria-label="Redo">↷</button></div>{selection.count>1&&<button className="tool-button selection-button" onClick={groupSelection} disabled={!selection.canGroup} title={selection.canGroup?'Group selected elements':'Selected elements must be in the same section'}>Group {selection.count}</button>}{selection.isGroup&&<button className="tool-button selection-button" title="Ungroup selected elements" onClick={ungroupSelection}>Ungroup</button>}<div className="topbar-group">{['Desktop','Tablet','Mobile'].map(d=><button key={d} className={`device-button ${device===d?'active':''}`} title={`Preview at ${d.toLowerCase()} width`} onClick={()=>switchDevice(d)}>{d}</button>)}</div><div className="topbar-spacer"/><button className="tool-button inspector-toggle" title="Toggle design controls" onClick={()=>setInspectorOpen(v=>!v)}>Design</button><button className="tool-button" title="View published versions" onClick={openHistory}>History</button><button className="tool-button" title="Editor account settings" onClick={()=>setPasswordOpen(true)}>Account</button><button className="tool-button" title="Preview the site" onClick={()=>command('preview')}>Preview</button><button className="tool-button" title="Save the draft" onClick={saveNow}>Save</button><button className="tool-button publish-button" title="Publish the draft to the live website" onClick={publish}>Publish</button><button className="tool-button" title="Sign out of the editor" onClick={logout}>Log out</button></header>
     <main className="editor-main"><aside className="sidebar left"><div className="sidebar-tabs">{['blocks','pages','layers'].map(t=><button key={t} className={leftTab===t?'active':''} onClick={()=>setLeftTab(t)}>{t[0].toUpperCase()+t.slice(1)}</button>)}</div><div className="sidebar-body"><div id="blocks" style={{display:leftTab==='blocks'?'block':'none'}}/><div style={{display:leftTab==='pages'?'block':'none'}}><button className="mini-button" onClick={addPage}>＋ Add page</button><div className="panel-heading">Website pages</div><div className="page-list">{doc.pages.map(p=><div className="page-row" key={p.id}><button className={selected===p.id?'active':''} onClick={()=>selectPage(p.id)}>{p.title}<small style={{display:'block',color:'#888'}}>/{p.slug}</small></button><button className="mini-button" onClick={()=>editPage(p)} title="Page settings">✎</button><button className="mini-button" onClick={()=>duplicatePage(p)} title="Duplicate">⧉</button><button className="mini-button" onClick={()=>deletePage(p)} title="Delete">×</button></div>)}</div></div><div id="layers" style={{display:leftTab==='layers'?'block':'none'}}/></div></aside>
       <section className="canvas-shell"><input ref={imageInputRef} type="file" accept="image/*" hidden onChange={changeImage}/><div className="canvas-wrap" style={{maxWidth:device==='Tablet'?768:device==='Mobile'?390:'none'}}><div id="gjs"/></div></section>
-      <aside className={`sidebar right ${inspectorOpen?'open':''}`}><div className="sidebar-tabs">{['styles','settings'].map(t=><button key={t} className={rightTab===t?'active':''} onClick={()=>setRightTab(t)}>{t==='styles'?'Design':'Settings'}</button>)}</div><div className="sidebar-body"><div id="selectors" style={{display:rightTab==='styles'?'block':'none'}}/><div id="styles" style={{display:rightTab==='styles'?'block':'none'}}/><div id="traits" style={{display:rightTab==='settings'?'block':'none'}}/>{rightTab==='settings'&&<p style={{color:'#777'}}>Select an element to edit its links, labels, alt text, and advanced attributes.</p>}</div></aside></main>
+      <aside className={`sidebar right ${inspectorOpen?'open':''}`}><div className="sidebar-tabs">{['styles','settings'].map(t=><button key={t} className={rightTab===t?'active':''} onClick={()=>setRightTab(t)}>{t==='styles'?'Design':'Settings'}</button>)}</div><div className="sidebar-body">{rightTab==='styles'&&position&&<PositionFields key={`${position.x}:${position.y}:${position.anchor}`}
+        position={position} apply={applyPosition} copiedPosition={copiedPosition}
+        onCopy={()=>{setCopiedPosition(position);notify('Position copied for use on another page.')}} />}
+      <div id="selectors" style={{display:rightTab==='styles'?'block':'none'}}/><div id="styles" style={{display:rightTab==='styles'?'block':'none'}}/><div id="traits" style={{display:rightTab==='settings'?'block':'none'}}/>{rightTab==='settings'&&<p style={{color:'#777'}}>Select an element to edit its links, labels, alt text, and advanced attributes.</p>}</div></aside></main>
     {colorTarget && <BackgroundColorPicker
       currentColor={getBackgroundStyle(colorTarget)?.backgroundColor}
       onClose={() => setColorTarget(null)}
@@ -136,6 +222,28 @@ export default function EditorClient() {
       }}
     />}
     <footer className="editor-status"><span>{status}</span><span style={{marginLeft:'auto'}}>Revision {doc.revision} · autosave on</span></footer>{toast&&<div className={`toast ${toast.error?'error':''}`}>{toast.message}</div>}{history&&<div className="modal-backdrop" onClick={()=>setHistory(null)}><div className="modal" onClick={e=>e.stopPropagation()}><button className="mini-button" style={{float:'right'}} onClick={()=>setHistory(null)}>×</button><h2>Published versions</h2>{history.length===0&&<p>No published editor versions yet.</p>}{history.map(item=><div className="history-item" key={item.sha}><div><strong>{item.message}</strong><small style={{display:'block'}}>{new Date(item.date).toLocaleString()} · {item.author}</small></div><button className="mini-button" onClick={()=>restore(item.sha)}>Restore draft</button></div>)}</div></div>}{passwordOpen&&<PasswordModal close={()=>setPasswordOpen(false)} notify={notify}/>}</div>;
+}
+
+function PositionFields({ position, apply, copiedPosition, onCopy }) {
+  function submit(event) {
+    event.preventDefault();
+    const values = new FormData(event.currentTarget);
+    apply({ x: Number(values.get('x')), y: Number(values.get('y')) });
+  }
+
+  return <form className="position-fields" onSubmit={submit}>
+    <strong>Position on page</strong>
+    <div className="position-coordinates">
+      <label>X (px)<input type="number" name="x" step="any" defaultValue={position.x} required /></label>
+      <label>Y (px)<input type="number" name="y" step="any" defaultValue={position.y} required /></label>
+    </div>
+    <small>{position.anchor ? `Anchored ${position.anchor} in its container` : 'Measured from the top-left of the page'}</small>
+    <div className="position-actions">
+      <button className="mini-button" type="submit">Apply</button>
+      <button className="mini-button" type="button" onClick={onCopy}>Copy position</button>
+      <button className="mini-button" type="button" disabled={!copiedPosition} onClick={()=>apply(copiedPosition)}>Use copied position</button>
+    </div>
+  </form>;
 }
 
 function PasswordModal({ close, notify }) {
