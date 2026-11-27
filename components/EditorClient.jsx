@@ -155,6 +155,7 @@ export default function EditorClient() {
     });
     gallery.addAttributes({ 'data-gallery-layout': layout, 'data-gallery-shape': shape });
     editorRef.current?.select(gallery);
+    editorRef.current?.refresh({ tools: true });
     setGalleryTarget(null);
     scheduleSave();
   }

@@ -18,9 +18,7 @@ function VisualDialog({ title, onClose, children, className = '' }) {
 
 export function GalleryDialog({ gallery, assets, onClose, onApply, onUpload }) {
   const attrs = gallery.getAttributes();
-  const hasOriginalLayout = gallery.getClasses().some(name => name === 'services-images' || name === 'picture-grid');
-  const [layout, setLayout] = useState(attrs['data-gallery-layout'] || 'equal');
-  const [shape, setShape] = useState(attrs['data-gallery-shape'] || 'original');
+  const hasOriginalLayout = attrs['data-gallery-kind'] === 'home' || gallery.getClasses().includes('picture-grid');
   const [items, setItems] = useState(() => gallery.components().models.flatMap(link => {
     if (!link.getAttributes()['data-gallery-photo']) return [];
     const image = link.components().models.find(child => child.get('tagName') === 'img');
@@ -73,11 +71,16 @@ export function GalleryDialog({ gallery, assets, onClose, onApply, onUpload }) {
   }
 
   return <VisualDialog title="Edit gallery" onClose={onClose} className="gallery-dialog">
+    <form onSubmit={event => {
+      event.preventDefault();
+      const values = new FormData(event.currentTarget);
+      onApply({ items, layout: values.get('layout'), shape: values.get('shape') });
+    }}>
     <div className="gallery-modal-options">
-      <label>Layout<select value={layout} onChange={event=>setLayout(event.target.value)}>
+      <label>Layout<select name="layout" defaultValue={attrs['data-gallery-layout'] || 'equal'}>
         {Object.entries(galleryLayouts).filter(([value])=>value!=='original'||hasOriginalLayout).map(([value, name])=><option key={value} value={value}>{name}</option>)}
       </select></label>
-      <label>Image shape<select value={shape} onChange={event=>setShape(event.target.value)}>
+      <label>Image shape<select name="shape" defaultValue={attrs['data-gallery-shape'] || 'original'}>
         {Object.entries(galleryShapes).map(([value, name])=><option key={value} value={value}>{name}</option>)}
       </select></label>
     </div>
@@ -111,8 +114,9 @@ export function GalleryDialog({ gallery, assets, onClose, onApply, onUpload }) {
     </div>
     <div className="background-picker-actions">
       <button type="button" className="mini-button" onClick={onClose}>Cancel</button>
-      <button type="button" className="tool-button" disabled={busy} onClick={()=>onApply({ items, layout, shape })}>{busy?'Uploading…':'Apply gallery'}</button>
+      <button type="submit" className="tool-button" disabled={busy}>{busy?'Uploading…':'Apply gallery'}</button>
     </div>
+    </form>
   </VisualDialog>;
 }
 

@@ -27,6 +27,12 @@ test('the existing photo groups migrate once and preserve photo order, captions 
       .map(child => [child.attributes.src.replace(/^\//, ''), child.attributes.alt || '']);
     assert.deepEqual(photos(gallery), photos(original));
     assert.equal(collect(gallery, node => node?.attributes?.['data-gallery-photo']).length, photos(original).length);
+    if (pageId === 'home') {
+      const [wrapper] = collect(root(migrated), node => node?.attributes?.['data-gallery-container'] === 'home');
+      assert.equal(wrapper.components[0], gallery);
+      assert.equal(wrapper.attributes['data-editor-gallery'], undefined);
+      assert.equal(gallery.attributes['data-gallery-kind'], 'home');
+    }
     assert.deepEqual(collect(root(migrated), node => node?.tagName === 'iframe'),
       collect(root(site), node => node?.tagName === 'iframe'));
   }
