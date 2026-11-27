@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 3,
-  "updatedAt": "2026-11-27T23:01:29.913Z",
+  "updatedAt": "2026-11-27T23:01:54.147Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -658,13 +658,9 @@
                       "attributes": {
                         "data-editor-gallery": "true",
                         "data-gallery-layout": "original",
-                        "data-gallery-shape": "original"
+                        "data-gallery-shape": "square"
                       },
                       "components": [
-                        {
-                          "type": "textnode",
-                          "content": "\n                "
-                        },
                         {
                           "type": "link",
                           "attributes": {
@@ -685,10 +681,6 @@
                               }
                             }
                           ]
-                        },
-                        {
-                          "type": "textnode",
-                          "content": "\n                "
                         },
                         {
                           "type": "link",
@@ -712,10 +704,6 @@
                           ]
                         },
                         {
-                          "type": "textnode",
-                          "content": "\n                "
-                        },
-                        {
                           "type": "link",
                           "attributes": {
                             "href": "/static/images/NewPics/leah_new_4.jpg",
@@ -733,6 +721,18 @@
                               }
                             }
                           ]
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
+                        },
+                        {
+                          "type": "textnode",
+                          "content": "\n                "
                         },
                         {
                           "type": "textnode",
