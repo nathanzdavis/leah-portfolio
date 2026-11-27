@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": 5,
-  "updatedAt": "2026-11-27T23:21:15.860Z",
+  "revision": 4,
+  "updatedAt": "2026-11-27T23:27:19.979Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -307,48 +307,11 @@
           "promo"
         ],
         "style": {
-          "height": "15px",
-          "top": "161px",
+          "height": "200%",
+          "top": "225px",
           "left": "0px",
           "position": "static",
-          "font-family": "Arial, Helvetica, sans-serif",
-          "width": "1333px"
-        }
-      },
-      {
-        "selectors": [
-          "#iehm4"
-        ],
-        "style": {
-          "transform": " translateX(-13px) translateY(-3px)",
-          "translate": "13px 3px"
-        }
-      },
-      {
-        "selectors": [
-          "#iw2xa"
-        ],
-        "style": {
-          "background-color": "transparent"
-        }
-      },
-      {
-        "selectors": [
-          "promo__title"
-        ],
-        "style": {
-          "text-align": "center",
-          "position": "fixed",
-          "opacity": "1"
-        }
-      },
-      {
-        "selectors": [
-          "promo__slogan"
-        ],
-        "style": {
-          "text-align": "center",
-          "position": "fixed"
+          "font-family": "Arial, Helvetica, sans-serif"
         }
       }
     ],
@@ -375,7 +338,6 @@
                 },
                 {
                   "tagName": "header",
-                  "resizable": true,
                   "classes": [
                     "page-header"
                   ],
@@ -395,14 +357,10 @@
                         },
                         {
                           "tagName": "nav",
-                          "resizable": true,
                           "classes": [
                             "nav",
                             "page-header__nav"
                           ],
-                          "attributes": {
-                            "id": "iybwg"
-                          },
                           "components": [
                             {
                               "type": "textnode",
@@ -413,18 +371,12 @@
                               "content": "\n                    "
                             },
                             {
-                              "resizable": true,
                               "classes": [
                                 "page-header__nav-link2"
                               ],
-                              "attributes": {
-                                "id": "iehm4"
-                              },
                               "components": [
                                 {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link3"
                                   ],
@@ -452,7 +404,6 @@
                             {
                               "tagName": "span",
                               "type": "text",
-                              "droppable": true,
                               "components": [
                                 {
                                   "type": "textnode",
@@ -460,8 +411,6 @@
                                 },
                                 {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link",
                                     "page-header__nav-link_selected"
@@ -477,15 +426,16 @@
                                   ]
                                 },
                                 {
+                                  "type": "textnode",
+                                  "content": " "
+                                },
+                                {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link"
                                   ],
                                   "attributes": {
-                                    "href": "about.html",
-                                    "id": "ii7g7"
+                                    "href": "about.html"
                                   },
                                   "components": [
                                     {
@@ -499,13 +449,7 @@
                                   "content": " "
                                 },
                                 {
-                                  "type": "textnode",
-                                  "content": " "
-                                },
-                                {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link"
                                   ],
@@ -591,9 +535,6 @@
                   "classes": [
                     "promo"
                   ],
-                  "attributes": {
-                    "id": "idhft"
-                  },
                   "components": [
                     {
                       "type": "textnode",
@@ -667,10 +608,6 @@
                 },
                 {
                   "tagName": "section",
-                  "resizable": true,
-                  "attributes": {
-                    "id": "ixr6v"
-                  },
                   "components": [
                     {
                       "type": "textnode",
@@ -694,7 +631,7 @@
                             "data-gallery-layout": "original",
                             "data-gallery-shape": "original",
                             "data-gallery-kind": "home",
-                            "id": "iw2xa"
+                            "id": "irwqn"
                           },
                           "components": [
                             {
@@ -706,13 +643,11 @@
                               "components": [
                                 {
                                   "type": "image",
-                                  "droppable": false,
                                   "resizable": {
-                                    "ratioDefault": true
+                                    "ratioDefault": 1
                                   },
                                   "attributes": {
                                     "src": "/static/images/NewPics/leah_new_2.jpg",
-                                    "id": "ikufg",
                                     "alt": ""
                                   }
                                 }
@@ -727,13 +662,11 @@
                               "components": [
                                 {
                                   "type": "image",
-                                  "droppable": false,
                                   "resizable": {
-                                    "ratioDefault": true
+                                    "ratioDefault": 1
                                   },
                                   "attributes": {
                                     "src": "/static/images/NewPics/leah_new_3.jpg",
-                                    "id": "iu54l",
                                     "alt": ""
                                   }
                                 }
@@ -785,8 +718,6 @@
                     {
                       "tagName": "h2",
                       "type": "text",
-                      "droppable": true,
-                      "resizable": true,
                       "classes": [
                         "promo__slogan2"
                       ],
@@ -1223,7 +1154,6 @@
                               "content": "\n                    "
                             },
                             {
-                              "resizable": true,
                               "classes": [
                                 "page-header__nav-link2"
                               ],
@@ -9287,9 +9217,6 @@
                 "background-position",
                 "background-size"
               ],
-              "attributes": {
-                "id": "ig0pcf2"
-              },
               "components": [
                 {
                   "type": "textnode",
@@ -9297,7 +9224,6 @@
                 },
                 {
                   "tagName": "header",
-                  "resizable": true,
                   "classes": [
                     "page-header"
                   ],
@@ -9371,8 +9297,6 @@
                                 },
                                 {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link"
                                   ],
@@ -9411,8 +9335,6 @@
                                 },
                                 {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link"
                                   ],
@@ -9432,8 +9354,6 @@
                                 },
                                 {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link",
                                     "page-header__nav-link_selected"
@@ -9454,8 +9374,6 @@
                                 },
                                 {
                                   "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
                                   "classes": [
                                     "page-header__nav-link"
                                   ],
@@ -9499,7 +9417,6 @@
                 },
                 {
                   "tagName": "section",
-                  "resizable": true,
                   "classes": [
                     "gallery-hero"
                   ],
@@ -9511,8 +9428,6 @@
                     {
                       "tagName": "h1",
                       "type": "text",
-                      "droppable": true,
-                      "resizable": true,
                       "classes": [
                         "gallery-hero__title"
                       ],
@@ -9535,7 +9450,6 @@
                 },
                 {
                   "tagName": "section",
-                  "resizable": true,
                   "classes": [
                     "gallery-section"
                   ],
@@ -9554,7 +9468,6 @@
                     },
                     {
                       "name": "Gallery",
-                      "resizable": true,
                       "classes": [
                         "picture-grid"
                       ],
@@ -9573,14 +9486,12 @@
                           "components": [
                             {
                               "type": "image",
-                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": true
+                                "ratioDefault": 1
                               },
                               "attributes": {
                                 "src": "/static/images/gallery/gallery1.jpg",
-                                "alt": "Performance 1",
-                                "id": "iunvzgc"
+                                "alt": "Performance 1"
                               }
                             }
                           ]
@@ -9594,14 +9505,12 @@
                           "components": [
                             {
                               "type": "image",
-                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": true
+                                "ratioDefault": 1
                               },
                               "attributes": {
                                 "src": "/static/images/gallery/gallery2.jpg",
-                                "alt": "Performance 2",
-                                "id": "ifr9gxl"
+                                "alt": "Performance 2"
                               }
                             }
                           ]
@@ -9634,14 +9543,12 @@
                           "components": [
                             {
                               "type": "image",
-                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": true
+                                "ratioDefault": 1
                               },
                               "attributes": {
                                 "src": "/static/images/gallery/gallery4.jpg",
-                                "alt": "Performance 4",
-                                "id": "i6e2lkj"
+                                "alt": "Performance 4"
                               }
                             }
                           ]
@@ -9655,14 +9562,12 @@
                           "components": [
                             {
                               "type": "image",
-                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": true
+                                "ratioDefault": 1
                               },
                               "attributes": {
                                 "src": "/static/images/gallery/gallery5.jpg",
-                                "alt": "Performance 5",
-                                "id": "ipy86tr"
+                                "alt": "Performance 5"
                               }
                             }
                           ]
@@ -9790,14 +9695,12 @@
                           "components": [
                             {
                               "type": "image",
-                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": true
+                                "ratioDefault": 1
                               },
                               "attributes": {
                                 "src": "/static/images/gallery/gallery12.jpg",
-                                "alt": "Performance 12",
-                                "id": "igzcgah"
+                                "alt": "Performance 12"
                               }
                             }
                           ]
@@ -9811,14 +9714,12 @@
                           "components": [
                             {
                               "type": "image",
-                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": true
+                                "ratioDefault": 1
                               },
                               "attributes": {
                                 "src": "/static/images/gallery/gallery13.jpg",
-                                "alt": "Performance 13",
-                                "id": "i9ju4qx"
+                                "alt": "Performance 13"
                               }
                             }
                           ]
@@ -9832,14 +9733,12 @@
                           "components": [
                             {
                               "type": "image",
-                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": true
+                                "ratioDefault": 1
                               },
                               "attributes": {
                                 "src": "/static/images/gallery/gallery14.jpg",
-                                "alt": "Performance 14",
-                                "id": "iudwp2t"
+                                "alt": "Performance 14"
                               }
                             }
                           ]
@@ -9853,14 +9752,12 @@
                           "components": [
                             {
                               "type": "image",
-                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": true
+                                "ratioDefault": 1
                               },
                               "attributes": {
                                 "src": "/static/images/gallery/gallery15.jpg",
-                                "alt": "Performance 14",
-                                "id": "inm4wge"
+                                "alt": "Performance 14"
                               }
                             }
                           ]
@@ -9947,7 +9844,6 @@
                 },
                 {
                   "tagName": "section",
-                  "resizable": true,
                   "classes": [
                     "gallery-section"
                   ],
