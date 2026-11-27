@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 3,
-  "updatedAt": "2026-11-27T22:43:30.654Z",
+  "updatedAt": "2026-11-27T22:45:27.755Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -661,11 +661,13 @@
                         },
                         {
                           "type": "image",
+                          "droppable": false,
                           "resizable": {
-                            "ratioDefault": 1
+                            "ratioDefault": true
                           },
                           "attributes": {
-                            "src": "static/images/NewPics/leah_new_2.jpg"
+                            "src": "static/images/NewPics/leah_new_2.jpg",
+                            "id": "ikufg"
                           }
                         },
                         {
@@ -9218,6 +9220,7 @@
                 },
                 {
                   "tagName": "header",
+                  "resizable": true,
                   "classes": [
                     "page-header"
                   ],
@@ -9422,6 +9425,8 @@
                     {
                       "tagName": "h1",
                       "type": "text",
+                      "droppable": true,
+                      "resizable": true,
                       "classes": [
                         "gallery-hero__title"
                       ],
@@ -9444,6 +9449,7 @@
                 },
                 {
                   "tagName": "section",
+                  "resizable": true,
                   "classes": [
                     "gallery-section"
                   ],
@@ -9461,6 +9467,7 @@
                       "content": "\n            "
                     },
                     {
+                      "resizable": true,
                       "classes": [
                         "picture-grid"
                       ],
@@ -9473,12 +9480,14 @@
                           "components": [
                             {
                               "type": "image",
+                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": 1
+                                "ratioDefault": true
                               },
                               "attributes": {
                                 "src": "static/images/gallery/gallery1.jpg",
-                                "alt": "Performance 1"
+                                "alt": "Performance 1",
+                                "id": "iunvzgc"
                               }
                             }
                           ]
@@ -9491,12 +9500,14 @@
                           "components": [
                             {
                               "type": "image",
+                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": 1
+                                "ratioDefault": true
                               },
                               "attributes": {
                                 "src": "static/images/gallery/gallery2.jpg",
-                                "alt": "Performance 2"
+                                "alt": "Performance 2",
+                                "id": "ifr9gxl"
                               }
                             }
                           ]
@@ -9527,12 +9538,14 @@
                           "components": [
                             {
                               "type": "image",
+                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": 1
+                                "ratioDefault": true
                               },
                               "attributes": {
                                 "src": "static/images/gallery/gallery4.jpg",
-                                "alt": "Performance 4"
+                                "alt": "Performance 4",
+                                "id": "i6e2lkj"
                               }
                             }
                           ]
@@ -9545,12 +9558,14 @@
                           "components": [
                             {
                               "type": "image",
+                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": 1
+                                "ratioDefault": true
                               },
                               "attributes": {
                                 "src": "static/images/gallery/gallery5.jpg",
-                                "alt": "Performance 5"
+                                "alt": "Performance 5",
+                                "id": "ipy86tr"
                               }
                             }
                           ]
@@ -9671,12 +9686,14 @@
                           "components": [
                             {
                               "type": "image",
+                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": 1
+                                "ratioDefault": true
                               },
                               "attributes": {
                                 "src": "static/images/gallery/gallery12.jpg",
-                                "alt": "Performance 12"
+                                "alt": "Performance 12",
+                                "id": "igzcgah"
                               }
                             }
                           ]
@@ -9689,12 +9706,14 @@
                           "components": [
                             {
                               "type": "image",
+                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": 1
+                                "ratioDefault": true
                               },
                               "attributes": {
                                 "src": "static/images/gallery/gallery13.jpg",
-                                "alt": "Performance 13"
+                                "alt": "Performance 13",
+                                "id": "i9ju4qx"
                               }
                             }
                           ]
@@ -9707,12 +9726,14 @@
                           "components": [
                             {
                               "type": "image",
+                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": 1
+                                "ratioDefault": true
                               },
                               "attributes": {
                                 "src": "static/images/gallery/gallery14.jpg",
-                                "alt": "Performance 14"
+                                "alt": "Performance 14",
+                                "id": "iudwp2t"
                               }
                             }
                           ]
@@ -9725,12 +9746,14 @@
                           "components": [
                             {
                               "type": "image",
+                              "droppable": false,
                               "resizable": {
-                                "ratioDefault": 1
+                                "ratioDefault": true
                               },
                               "attributes": {
                                 "src": "static/images/gallery/gallery15.jpg",
-                                "alt": "Performance 14"
+                                "alt": "Performance 14",
+                                "id": "inm4wge"
                               }
                             }
                           ]
@@ -10462,6 +10485,7 @@
                 },
                 {
                   "tagName": "section",
+                  "resizable": true,
                   "classes": [
                     "gallery-section"
                   ],
