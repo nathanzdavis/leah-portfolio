@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": 3,
-  "updatedAt": "2026-11-27T22:26:25.749Z",
+  "updatedAt": "2026-11-27T22:26:27.303Z",
   "site": {
     "title": "Leah Mosier",
     "description": "Portfolio of cellist, percussionist, and composer Leah Mosier."
@@ -435,6 +435,24 @@
                                   ]
                                 },
                                 {
+                                  "type": "link",
+                                  "droppable": true,
+                                  "resizable": true,
+                                  "classes": [
+                                    "page-header__nav-link"
+                                  ],
+                                  "attributes": {
+                                    "href": "about.html",
+                                    "id": "ii7g7"
+                                  },
+                                  "components": [
+                                    {
+                                      "type": "textnode",
+                                      "content": "\n                                About "
+                                    }
+                                  ]
+                                },
+                                {
                                   "type": "textnode",
                                   "content": " "
                                 },
@@ -481,24 +499,6 @@
                                 {
                                   "type": "textnode",
                                   "content": " "
-                                },
-                                {
-                                  "type": "link",
-                                  "droppable": true,
-                                  "resizable": true,
-                                  "classes": [
-                                    "page-header__nav-link"
-                                  ],
-                                  "attributes": {
-                                    "href": "about.html",
-                                    "id": "ii7g7"
-                                  },
-                                  "components": [
-                                    {
-                                      "type": "textnode",
-                                      "content": "\n                                About "
-                                    }
-                                  ]
                                 },
                                 {
                                   "type": "link",
