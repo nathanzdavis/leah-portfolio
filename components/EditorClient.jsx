@@ -1,11 +1,15 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { replaceImage, uploadEditorMedia } from '@/lib/editor-media';
+import { blockIcons, isImage, labelSelectionTools, setupDragModes } from '@/lib/editor-interactions';
 
 const canvasStyles = ['/static/css/screen.min.css','/static/css/custom.min.css','/static/css/about.css','/static/css/repertoire.css','/static/css/gallery.css','/static/css/sheet-music.css','https://fonts.googleapis.com/css?family=Roboto+Slab|Aguafina+Script|Albert+Sans|Aboreto&display=swap'];
 
 export default function EditorClient() {
   const editorRef = useRef(null); const draftRef = useRef(null); const saveTimer = useRef(null);
+  const imageInputRef = useRef(null);
+  const imageTargetRef = useRef(null);
   const [doc,setDoc]=useState(null); const [leftTab,setLeftTab]=useState('blocks'); const [rightTab,setRightTab]=useState('styles'); const [device,setDevice]=useState('Desktop'); const [inspectorOpen,setInspectorOpen]=useState(false);
   const [selection,setSelection]=useState({count:0,canGroup:false,isGroup:false});
   const [status,setStatus]=useState('Loading draft…'); const [toast,setToast]=useState(null); const [history,setHistory]=useState(null); const [passwordOpen,setPasswordOpen]=useState(false); const router=useRouter();
@@ -15,16 +19,77 @@ export default function EditorClient() {
   async function saveNow(){const value=snapshot();if(!value)return;setStatus('Saving draft…');const res=await fetch('/api/editor/draft',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(value)});const data=await res.json();if(!res.ok){setStatus('Draft not saved');notify(data.error||'Save failed',true);return false}draftRef.current=value;setDoc(value);setStatus(`Draft saved ${new Date(data.savedAt).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}`);editorRef.current?.clearDirtyCount();return true}
   function scheduleSave(){clearTimeout(saveTimer.current);setStatus('Unsaved changes');saveTimer.current=setTimeout(saveNow,1400)}
 
-  useEffect(()=>{let disposed=false; (async()=>{const res=await fetch('/api/editor/draft');if(res.status===401){router.replace('/editor/login');return}const loaded=await res.json();if(disposed)return;draftRef.current=loaded;setDoc(loaded);const grapesjs=(await import('grapesjs')).default;const editor=grapesjs.init({container:'#gjs',height:'100%',fromElement:false,projectData:loaded.projectData,storageManager:false,panels:{defaults:[]},canvas:{styles:canvasStyles},blockManager:{appendTo:'#blocks'},layerManager:{appendTo:'#layers'},styleManager:{appendTo:'#styles',sectors:[{name:'Layout',open:true,buildProps:['display','position','width','height','min-height','max-width','margin','padding','overflow','z-index','flex-direction','flex-wrap','justify-content','align-items','gap','grid-template-columns']},{name:'Typography',open:true,buildProps:['font-family','font-size','font-weight','line-height','letter-spacing','color','text-align','text-decoration']},{name:'Appearance',open:true,buildProps:['background-color','background','border','border-radius','box-shadow','opacity']},{name:'Effects',buildProps:['transform','transition']}]},traitManager:{appendTo:'#traits'},selectorManager:{appendTo:'#selectors'},deviceManager:{devices:[{id:'Desktop',name:'Desktop',width:''},{id:'Tablet',name:'Tablet',width:'768px',widthMedia:'992px'},{id:'Mobile',name:'Mobile',width:'390px',widthMedia:'600px'}]},assetManager:{assets:loaded.projectData.assets||[],upload:'/api/editor/media',uploadName:'files'}});
-      editorRef.current=editor;editor.setDragMode('absolute');
+  function chooseImage(model) {
+    imageTargetRef.current = model;
+    imageInputRef.current?.click();
+  }
+
+  async function changeImage(event) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    const model = imageTargetRef.current;
+    if (!file || !model) return;
+    const editor = editorRef.current;
+    notify('Uploading image…');
+    try {
+      const asset = await uploadEditorMedia(file);
+      if (editor !== editorRef.current || !model.parent()) return;
+      if (asset.type !== 'image') throw new Error('Choose an image file.');
+      editor.AssetManager.add(asset);
+      replaceImage(model, asset.src);
+      scheduleSave();
+      notify('Image replaced');
+    } catch (error) {
+      notify(error.message, true);
+    }
+  }
+
+  async function uploadAssets(event) {
+    const files = Array.from(event.dataTransfer?.files || event.target?.files || []);
+    if (!files.length) return;
+    const editor = editorRef.current;
+    notify('Uploading media…');
+    try {
+      for (const file of files) {
+        const asset = await uploadEditorMedia(file);
+        if (editor !== editorRef.current) return;
+        editor.AssetManager.add(asset);
+      }
+      notify('Media uploaded');
+    } catch (error) {
+      notify(error.message, true);
+    } finally {
+      if (event.target?.type === 'file') event.target.value = '';
+    }
+  }
+
+  useEffect(()=>{let disposed=false; (async()=>{const res=await fetch('/api/editor/draft');if(res.status===401){router.replace('/editor/login');return}const loaded=await res.json();if(disposed)return;draftRef.current=loaded;setDoc(loaded);const grapesjs=(await import('grapesjs')).default;const editor=grapesjs.init({container:'#gjs',height:'100%',fromElement:false,projectData:loaded.projectData,storageManager:false,panels:{defaults:[]},canvas:{styles:canvasStyles},blockManager:{appendTo:'#blocks'},layerManager:{appendTo:'#layers'},styleManager:{appendTo:'#styles',sectors:[{name:'Layout',open:true,buildProps:['display','position','width','height','min-height','max-width','margin','padding','overflow','z-index','flex-direction','flex-wrap','justify-content','align-items','gap','grid-template-columns']},{name:'Typography',open:true,buildProps:['font-family','font-size','font-weight','line-height','letter-spacing','color','text-align','text-decoration']},{name:'Appearance',open:true,buildProps:['background-color','background','border','border-radius','box-shadow','opacity']},{name:'Effects',buildProps:['transform','transition']}]},traitManager:{appendTo:'#traits'},selectorManager:{appendTo:'#selectors'},deviceManager:{devices:[{id:'Desktop',name:'Desktop',width:''},{id:'Tablet',name:'Tablet',width:'768px',widthMedia:'992px'},{id:'Mobile',name:'Mobile',width:'390px',widthMedia:'600px'}]},assetManager:{assets:loaded.projectData.assets||[],upload:'/api/editor/media',uploadName:'files',uploadFile:uploadAssets}});
+      editorRef.current=editor;
+      setupDragModes(editor, notify);
       const blocks=[['text','Text','<p>Double-click to edit this text</p>'],['heading','Heading','<h2>New heading</h2>'],['button','Button','<a class="editor-button" href="#">Button</a>'],['image','Image',{type:'image'}],['section','Section','<section style="padding:60px 24px"><div style="max-width:1100px;margin:auto"><h2>New section</h2><p>Add content here.</p></div></section>'],['columns','Columns','<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px"><div>Column one</div><div>Column two</div></div>'],['card','Card','<article style="padding:24px;border:1px solid #ddd;border-radius:12px"><h3>Card title</h3><p>Card content</p></article>'],['divider','Divider','<hr>'],['spacer','Spacer','<div style="height:48px"></div>'],['video','Video',{type:'video'}]];
-      blocks.forEach(([id,label,content])=>editor.BlockManager.add(id,{label,content,category:id==='section'||id==='columns'?'Layout':'Basic'}));
+      blocks.forEach(([id,label,content])=>editor.BlockManager.add(id,{
+        label, content, media: `<span class="editor-block-icon" aria-hidden="true">${blockIcons[id]}</span>`,
+        attributes: { title: `Drag to add ${label.toLowerCase()}` },
+        category:id==='section'||id==='columns'?'Layout':'Basic',
+      }));
       const syncSelection=()=>{const selected=editor.getSelectedAll();const parent=selected[0]?.parent();setSelection({count:selected.length,canGroup:selected.length>1&&selected.every(item=>item.parent()===parent),isGroup:selected.length===1&&selected[0].getAttributes?.()['data-editor-group']==='true'});};
-      const clampToolbar=()=>requestAnimationFrame(()=>{const toolbar=editor.Canvas.getToolbarEl?.();const canvas=editor.Canvas.getElement?.();if(!toolbar||!canvas||toolbar.offsetParent===null)return;const bar=toolbar.getBoundingClientRect();const bounds=canvas.getBoundingClientRect();const style=getComputedStyle(toolbar);let top=parseFloat(style.top)||0;let left=parseFloat(style.left)||0;const pad=6;if(bar.top<bounds.top+pad)top+=bounds.top+pad-bar.top;if(bar.bottom>bounds.bottom-pad)top-=bar.bottom-(bounds.bottom-pad);if(bar.left<bounds.left+pad)left+=bounds.left+pad-bar.left;if(bar.right>bounds.right-pad)left-=bar.right-(bounds.right-pad);toolbar.style.top=`${Math.max(pad,top)}px`;toolbar.style.left=`${Math.max(pad,left)}px`;});
-      editor.on('update',scheduleSave);editor.on('component:selected',(model)=>{if(model.get('tagName')!=='body')model.set({resizable:true,draggable:true,droppable:model.get('tagName')!=='img'},{silent:true});setInspectorOpen(true);syncSelection();clampToolbar();});
+      const clampToolbar = () => requestAnimationFrame(() => {
+        if (editorRef.current !== editor) return;
+        const toolbar = editor.Canvas.getToolbarEl();
+        const canvas = editor.Canvas.getElement();
+        if (!toolbar || !canvas || toolbar.offsetParent === null) return;
+        labelSelectionTools(toolbar, editor.getSelected(), chooseImage);
+        const bar = toolbar.getBoundingClientRect();
+        const bounds = canvas.getBoundingClientRect();
+        const style = getComputedStyle(toolbar);
+        const pad = 6;
+        const top = Math.max(bounds.top + pad, Math.min(bar.top, bounds.bottom - pad - bar.height));
+        const left = Math.max(bounds.left + pad, Math.min(bar.left, bounds.right - pad - bar.width));
+        toolbar.style.top = `${(parseFloat(style.top) || 0) + top - bar.top}px`;
+        toolbar.style.left = `${(parseFloat(style.left) || 0) + left - bar.left}px`;
+      });
+      editor.on('update',scheduleSave);editor.on('component:selected',(model)=>{if(model.get('tagName')!=='body')model.set({resizable:isImage(model)?{ratioDefault:true}:true,draggable:true,droppable:!isImage(model)},{silent:true});syncSelection();clampToolbar();});
       editor.on('component:deselected',syncSelection);editor.on('component:toggled',()=>{syncSelection();clampToolbar()});editor.on('canvas:tools:update',clampToolbar);editor.on('canvas:refresh',clampToolbar);
-      editor.on('component:drag:start',(data)=>{data?.command?.dragger?.setOptions({snapOffset:9,snapGuides:{x:9,y:9}})});
-      editor.on('asset:upload:response',(response)=>{const assets=response?.data||response?.assets||[];assets.forEach((asset)=>editor.AssetManager.add(asset));notify('Media uploaded')});
       setStatus('Draft loaded');
     })();return()=>{disposed=true;clearTimeout(saveTimer.current);editorRef.current?.destroy();editorRef.current=null}},[]);
 
@@ -45,9 +110,9 @@ export default function EditorClient() {
   async function logout(){await fetch('/api/auth/logout',{method:'POST'});router.replace('/editor/login');router.refresh()}
   if(!doc)return <main className="login-shell">Loading editor…</main>;
   const selected=editorRef.current?.Pages.getSelected()?.id||doc.pages[0]?.id;
-  return <div className="editor-app"><header className="editor-topbar"><div className="brand"><span className="brand-mark">LM</span><span className="brand-copy"><strong>Leah’s Studio</strong><small>Visual website editor</small></span></div><div className="topbar-group"><button className="tool-button" onClick={()=>command('undo')} title="Undo (Ctrl+Z)">↶</button><button className="tool-button" onClick={()=>command('redo')} title="Redo">↷</button></div>{selection.count>1&&<button className="tool-button selection-button" onClick={groupSelection} disabled={!selection.canGroup} title={selection.canGroup?'Group selected elements':'Selected elements must be in the same section'}>Group {selection.count}</button>}{selection.isGroup&&<button className="tool-button selection-button" onClick={ungroupSelection}>Ungroup</button>}<div className="topbar-group">{['Desktop','Tablet','Mobile'].map(d=><button key={d} className={`device-button ${device===d?'active':''}`} onClick={()=>switchDevice(d)}>{d}</button>)}</div><div className="topbar-spacer"/><button className="tool-button inspector-toggle" onClick={()=>setInspectorOpen(v=>!v)}>Design</button><button className="tool-button" onClick={openHistory}>History</button><button className="tool-button" onClick={()=>setPasswordOpen(true)}>Account</button><button className="tool-button" onClick={()=>command('preview')}>Preview</button><button className="tool-button" onClick={saveNow}>Save</button><button className="tool-button publish-button" onClick={publish}>Publish</button><button className="tool-button" onClick={logout}>Log out</button></header>
+  return <div className="editor-app"><header className="editor-topbar"><div className="brand"><span className="brand-mark">LM</span><span className="brand-copy"><strong>Leah’s Studio</strong><small>Visual website editor</small></span></div><div className="topbar-group"><button className="tool-button" onClick={()=>command('undo')} title="Undo (Ctrl+Z)" aria-label="Undo">↶</button><button className="tool-button" onClick={()=>command('redo')} title="Redo" aria-label="Redo">↷</button></div>{selection.count>1&&<button className="tool-button selection-button" onClick={groupSelection} disabled={!selection.canGroup} title={selection.canGroup?'Group selected elements':'Selected elements must be in the same section'}>Group {selection.count}</button>}{selection.isGroup&&<button className="tool-button selection-button" title="Ungroup selected elements" onClick={ungroupSelection}>Ungroup</button>}<div className="topbar-group">{['Desktop','Tablet','Mobile'].map(d=><button key={d} className={`device-button ${device===d?'active':''}`} title={`Preview at ${d.toLowerCase()} width`} onClick={()=>switchDevice(d)}>{d}</button>)}</div><div className="topbar-spacer"/><button className="tool-button inspector-toggle" title="Toggle design controls" onClick={()=>setInspectorOpen(v=>!v)}>Design</button><button className="tool-button" title="View published versions" onClick={openHistory}>History</button><button className="tool-button" title="Editor account settings" onClick={()=>setPasswordOpen(true)}>Account</button><button className="tool-button" title="Preview the site" onClick={()=>command('preview')}>Preview</button><button className="tool-button" title="Save the draft" onClick={saveNow}>Save</button><button className="tool-button publish-button" title="Publish the draft to the live website" onClick={publish}>Publish</button><button className="tool-button" title="Sign out of the editor" onClick={logout}>Log out</button></header>
     <main className="editor-main"><aside className="sidebar left"><div className="sidebar-tabs">{['blocks','pages','layers'].map(t=><button key={t} className={leftTab===t?'active':''} onClick={()=>setLeftTab(t)}>{t[0].toUpperCase()+t.slice(1)}</button>)}</div><div className="sidebar-body"><div id="blocks" style={{display:leftTab==='blocks'?'block':'none'}}/><div style={{display:leftTab==='pages'?'block':'none'}}><button className="mini-button" onClick={addPage}>＋ Add page</button><div className="panel-heading">Website pages</div><div className="page-list">{doc.pages.map(p=><div className="page-row" key={p.id}><button className={selected===p.id?'active':''} onClick={()=>selectPage(p.id)}>{p.title}<small style={{display:'block',color:'#888'}}>/{p.slug}</small></button><button className="mini-button" onClick={()=>editPage(p)} title="Page settings">✎</button><button className="mini-button" onClick={()=>duplicatePage(p)} title="Duplicate">⧉</button><button className="mini-button" onClick={()=>deletePage(p)} title="Delete">×</button></div>)}</div></div><div id="layers" style={{display:leftTab==='layers'?'block':'none'}}/></div></aside>
-      <section className="canvas-shell"><div className="canvas-wrap" style={{maxWidth:device==='Tablet'?768:device==='Mobile'?390:'none'}}><div id="gjs"/></div></section>
+      <section className="canvas-shell"><input ref={imageInputRef} type="file" accept="image/*" hidden onChange={changeImage}/><div className="canvas-wrap" style={{maxWidth:device==='Tablet'?768:device==='Mobile'?390:'none'}}><div id="gjs"/></div></section>
       <aside className={`sidebar right ${inspectorOpen?'open':''}`}><div className="sidebar-tabs">{['styles','settings'].map(t=><button key={t} className={rightTab===t?'active':''} onClick={()=>setRightTab(t)}>{t==='styles'?'Design':'Settings'}</button>)}</div><div className="sidebar-body"><div id="selectors" style={{display:rightTab==='styles'?'block':'none'}}/><div id="styles" style={{display:rightTab==='styles'?'block':'none'}}/><div id="traits" style={{display:rightTab==='settings'?'block':'none'}}/>{rightTab==='settings'&&<p style={{color:'#777'}}>Select an element to edit its links, labels, alt text, and advanced attributes.</p>}</div></aside></main>
     <footer className="editor-status"><span>{status}</span><span style={{marginLeft:'auto'}}>Revision {doc.revision} · autosave on</span></footer>{toast&&<div className={`toast ${toast.error?'error':''}`}>{toast.message}</div>}{history&&<div className="modal-backdrop" onClick={()=>setHistory(null)}><div className="modal" onClick={e=>e.stopPropagation()}><button className="mini-button" style={{float:'right'}} onClick={()=>setHistory(null)}>×</button><h2>Published versions</h2>{history.length===0&&<p>No published editor versions yet.</p>}{history.map(item=><div className="history-item" key={item.sha}><div><strong>{item.message}</strong><small style={{display:'block'}}>{new Date(item.date).toLocaleString()} · {item.author}</small></div><button className="mini-button" onClick={()=>restore(item.sha)}>Restore draft</button></div>)}</div></div>}{passwordOpen&&<PasswordModal close={()=>setPasswordOpen(false)} notify={notify}/>}</div>;
 }

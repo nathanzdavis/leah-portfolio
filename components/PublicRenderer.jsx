@@ -36,6 +36,26 @@ function safeAttributes(component) {
   return attrs;
 }
 
+function headerLinks(node, context) {
+  const pages = new Map(context.pages.filter(page => page.navVisible).map(page => [page.slug, page]));
+  const links = [];
+  for (const item of node?.components || []) {
+    if (!item || !classNameOf(item).split(/\s+/).includes('page-header__nav-link')) continue;
+    const href = item.attributes?.href || '';
+    const slug = href.replace(/^\.?\//, '').replace(/\.html$/, '').replace(/\/$/, '') || 'home';
+    const page = pages.get(slug);
+    if (page) {
+      links.push({ page, attrs: safeAttributes(item) });
+      pages.delete(slug);
+    }
+  }
+  links.push(...Array.from(pages.values(), page => ({ page, attrs: {} })));
+  return links.map(({ page, attrs }) => (
+    <a {...attrs} key={page.id} className={`page-header__nav-link ${page.slug===context.slug?'page-header__nav-link_selected':''}`}
+      href={page.slug==='home'?'/':`/${page.slug}`}>{page.title.split(' | ')[0]}</a>
+  ));
+}
+
 function renderNode(node, key, context) {
   if (node == null) return null;
   if (typeof node === 'string') return node;
@@ -46,7 +66,8 @@ function renderNode(node, key, context) {
   const classes = attrs.className || '';
   const { key: reactKey, ...elementAttrs } = attrs;
   if (tag === 'nav' && classes.includes('page-header__nav')) {
-    return <nav key={reactKey} {...elementAttrs}><div className="page-header__nav-link2"><a className="page-header__nav-link3" href="/" style={{fontWeight:'bold',fontSize:26,color:'#3a3a3a',fontFamily:'Aguafina Script, cursive'}}>LM</a></div><span>{context.pages.filter(p=>p.navVisible).map(p=><a key={p.id} className={`page-header__nav-link ${p.slug===context.slug?'page-header__nav-link_selected':''}`} href={p.slug==='home'?'/':`/${p.slug}`}>{p.title.split(' | ')[0]}</a>)}</span></nav>;
+    const linkContainer = Array.isArray(node.components) && node.components.find(child => child?.tagName === 'span');
+    return <nav key={reactKey} {...elementAttrs}><div className="page-header__nav-link2"><a className="page-header__nav-link3" href="/" style={{fontWeight:'bold',fontSize:26,color:'#3a3a3a',fontFamily:'Aguafina Script, cursive'}}>LM</a></div><span {...(linkContainer ? safeAttributes(linkContainer) : {})}>{headerLinks(linkContainer || node, context)}</span></nav>;
   }
   if (tag === 'nav' && classes.includes('page-footer__nav')) {
     return <nav key={reactKey} {...elementAttrs}>{context.pages.filter(p=>p.navVisible).map(p=><a key={p.id} className={`page-footer__nav-link ${p.slug===context.slug?'page-footer__nav-link_selected':''}`} href={p.slug==='home'?'/':`/${p.slug}`}>{p.title.split(' | ')[0]}</a>)}</nav>;
