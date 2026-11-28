@@ -4,7 +4,8 @@ import { flushSync } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import BackgroundColorPicker from '@/components/BackgroundColorPicker';
 import { GalleryDialog, ShadowDialog } from '@/components/EditorVisualDialogs';
-import { galleryPhoto, mediaSource, migrateGalleries, newGallery } from '@/lib/editor-gallery';
+import { galleryPhoto, mediaSource, newGallery } from '@/lib/editor-gallery';
+import { migrateSiteDocument } from '@/lib/editor-site-migrations';
 import { applyElementShadow, galleryPhotoShadow } from '@/lib/editor-shadows';
 import { createDraftHistory, draftHistoryData } from '@/lib/editor-history';
 import { detachBackgroundImage, getBackgroundStyle, replaceImageTarget, uploadEditorMedia } from '@/lib/editor-media';
@@ -79,7 +80,7 @@ export default function EditorClient() {
     if (!entry) return notify(direction < 0 ? 'No earlier edit in this tab.' : 'No edit to redo.');
     restoringRef.current = true;
     try {
-      const restored = migrateGalleries({ ...draftRef.current, ...JSON.parse(entry.data) });
+      const restored = migrateSiteDocument({ ...draftRef.current, ...JSON.parse(entry.data) });
       draftRef.current = { ...draftRef.current, ...restored };
       const manager = editor.UndoManager;
       if (direction < 0 ? manager.hasUndo() : manager.hasRedo()) {
@@ -241,7 +242,7 @@ export default function EditorClient() {
       undoRef.current = timeline;
       const restored = timeline.current();
       const recovered = restored.data !== originalData;
-      const current = migrateGalleries({ ...loaded, ...JSON.parse(restored.data) });
+      const current = migrateSiteDocument({ ...loaded, ...JSON.parse(restored.data) });
       draftRef.current = current;
 
       // GrapesJS resolves its canvas and sidebar targets synchronously.
